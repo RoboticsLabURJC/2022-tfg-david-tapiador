@@ -32,16 +32,11 @@ def loop(block_name, input_wires, output_wires, parameters, flags):
                 
                 if frame is not None:
         
-                    
-                    flipped = np.zeros(frame.shape)
+                    flipped = np.copy(frame)
 
-                    print(frame.shape)
-
-                    flipped[0] = np.rot90(frame[0], k=2, axes=(0,1))
-                    flipped[1] = np.rot90(frame[1], k=2, axes=(0,1))
-                    flipped[2] = np.rot90(frame[2], k=2, axes=(0,1))
-                    #flipped = frame
-
+                    flipped[:,:,0] = np.rot90(frame[:,:,0], k=2, axes=(0,1))
+                    flipped[:,:,1] = np.rot90(frame[:,:,1], k=2, axes=(0,1))
+                    flipped[:,:,2] = np.rot90(frame[:,:,2], k=2, axes=(0,1))
 
                     output_0.add(flipped)
     
