@@ -60,7 +60,7 @@ plugins:
 author:
   name   : "David Tapiador"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Ingeniero de Robótica Software.\nWeblog de mi proyecto final de carrera"
+  bio    : "Software robotics engineer.\nWeblog for my final grade proyect"
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
