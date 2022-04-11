@@ -1,6 +1,6 @@
 ---
-permalink: /about/
-title: "About"
+permalink: /about me/
+title: "About me"
 ---
 
 My name is David Tapiador. I'm actually studying Software Robotics engineering.
