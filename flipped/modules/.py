@@ -20,7 +20,6 @@ def loop(block_name, input_wires, output_wires, parameters, flags):
     required_frequency, update = float(parameters[0]), 1
     control_data = np.array([0.0,0.03])
     
-    first_time = True
     if flags[0] == 1:
         monitor_frequency(block_name, control_data, required_frequency, update)
 
@@ -30,9 +29,9 @@ def loop(block_name, input_wires, output_wires, parameters, flags):
             if enabled or (update := bool(enable_wire.get()[0])):
     
                 frame = input_0.get()
-
                 
                 if frame is not None:
+
                     frame[:,:,0] = np.rot90(frame[:,:,0], k=2, axes=(0,1))
                     frame[:,:,1] = np.rot90(frame[:,:,1], k=2, axes=(0,1))
                     frame[:,:,2] = np.rot90(frame[:,:,2], k=2, axes=(0,1))
