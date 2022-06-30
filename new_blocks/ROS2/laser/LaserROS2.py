@@ -67,7 +67,6 @@ def loop(block_name, input_wires, output_wires, parameters, flags):
             if enabled or (update := bool(enable_wire.get()[0])):
 
                 if measure is not None:
-                    print("MANDAMOS")
                     to_write = np.array(measure, dtype='<U64')
                     output_0.add(to_write)
                     control_data[0] += 1
