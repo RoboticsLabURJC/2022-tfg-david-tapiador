@@ -29,8 +29,8 @@ def loop(block_name, input_wires, output_wires, parameters, flags):
                 control_data[0] += 1
                 measures = input_0.get()
                 print("LEN -> " + str(len(measures)))
-                print(measures)
-                #for i in range(len(measures)):
+                print(measures[4])
+                # for i in range(len(measures)):
                 #    print(measures[i])
 
             sleep(control_data[1])
