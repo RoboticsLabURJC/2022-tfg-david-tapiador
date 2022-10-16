@@ -1,0 +1,42 @@
+{
+    '2624a318-38a7-4951-9bfa-dc0d574e0df5':
+    {
+        'inputs': {},
+        'outputs':
+        {
+            '1':
+            {
+                'wire': 'GDWOOOU42E'
+            }
+        },
+        'parameters': {},
+        'frequency': 30.0
+    },
+    '84f819e3-edc4-422c-b703-cc69639b5740':
+    {
+        'inputs':
+        {
+            '1':
+            {
+                'wire': 'ZXTN6DARFI'
+                'wire': 'GDWOOOU42E'
+            }
+        },
+        'outputs': {},
+        'parameters': {},
+        'frequency': 30.0
+    },
+    'd0ce284a-e439-4b67-8267-d20df4831f59':
+    {
+        'inputs': {},
+        'outputs':
+        {
+            '1':
+            {
+                'wire': 'ZXTN6DARFI'
+            }
+        },
+        'parameters': {},
+        'frequency': 30.0
+    }
+}

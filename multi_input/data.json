@@ -1,0 +1,45 @@
+{
+    "blocks": 
+    {
+        "84f819e3-edc4-422c-b703-cc69639b5740": 
+        {
+            "name": "Code_1", "type": "basic.code"
+        },
+        "2624a318-38a7-4951-9bfa-dc0d574e0df5": 
+        {
+            "name": "Code_2", "type": "basic.code"
+        },
+        "d0ce284a-e439-4b67-8267-d20df4831f59":
+        {
+            "name": "Code_3", "type": "basic.code"
+        }
+    },
+    "parameters": {},
+    "synchronize_frequency":
+    {
+        "84f819e3-edc4-422c-b703-cc69639b5740": 30.0, "2624a318-38a7-4951-9bfa-dc0d574e0df5": 30.0, "d0ce284a-e439-4b67-8267-d20df4831f59": 30.0
+    },
+    "wires": 
+    [
+        {
+            "source": 
+            {
+                "block": "2624a318-38a7-4951-9bfa-dc0d574e0df5", "port": "1", "name": "1"
+            },
+            "target":
+            {
+                "block": "84f819e3-edc4-422c-b703-cc69639b5740", "port": "1", "name": "1"
+            }
+        },
+        {
+            "source":
+            {
+                "block": "d0ce284a-e439-4b67-8267-d20df4831f59", "port": "1", "name": "1"
+            },
+            "target":
+            {
+                "block": "84f819e3-edc4-422c-b703-cc69639b5740", "port": "1", "name": "1"
+            }
+        }
+    ]
+}

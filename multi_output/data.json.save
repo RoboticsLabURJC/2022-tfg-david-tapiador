@@ -1,0 +1,52 @@
+{
+    "blocks":
+    {
+        "4f9cd6ba-e8d3-4f38-bb96-e7a4edfe098b":
+        {
+            "name": "Code_1",
+            "type": "basic.code"
+        },
+        "557173d7-93c2-4a86-986e-0f48975c0996":
+        {
+            "name": "Code_2",
+            "type": "basic.code"
+        }
+    },
+    "parameters": {},
+    "synchronize_frequency":
+    {
+        "4f9cd6ba-e8d3-4f38-bb96-e7a4edfe098b": 30.0,
+        "557173d7-93c2-4a86-986e-0f48975c0996": 30.0
+    },
+    "wires":
+    [
+        {
+            "source":
+            {
+                "block": "4f9cd6ba-e8d3-4f38-bb96-e7a4edfe098b",
+                "port": "O",
+                "name": "O"
+            },
+            "target":
+            {
+                "block": "557173d7-93c2-4a86-986e-0f48975c0996",
+                "port": "I1",
+                "name": "I1"
+            }
+        },
+        {
+            "source":
+            {
+                "block": "4f9cd6ba-e8d3-4f38-bb96-e7a4edfe098b",
+                "port": "O",
+                "name": "O"
+            },
+            "target":
+            {
+                "block": "557173d7-93c2-4a86-986e-0f48975c0996",
+                "port": "I2",
+                "name": "I2"
+            }
+        }
+    ]
+}
