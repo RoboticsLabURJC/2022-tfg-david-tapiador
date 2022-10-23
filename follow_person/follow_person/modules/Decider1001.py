@@ -1,3 +1,5 @@
+from time import sleep
+
 def main(inputs, outputs, parameters, synchronise):
     auto_enable = True
     try:
@@ -21,7 +23,7 @@ def main(inputs, outputs, parameters, synchronise):
     print("EMPEZAMOS")
     while(auto_enable or inputs.read_number('Enable')):
         results = inputs.read_array("Results")
-
+        sleep(0.1)
         
         if(results[0] != -1):
             #print("A")

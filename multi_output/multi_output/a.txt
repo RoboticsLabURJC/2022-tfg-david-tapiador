@@ -1,0 +1,14 @@
+Output -> {'O': {'wire0': 'OXUOVJ5GU9'}}
+Input  -> {'I1': {'wire0': 'OXUOVJ5GU9'}}
+Output2 -> {'O': {'wire0': 'OXUOVJ5GU9'}}
+Input2  -> {'I1': {'wire0': 'OXUOVJ5GU9'}}
+Output -> {'O': {'wire0': 'OXUOVJ5GU9', 'wire1': '1DU26G0R0C'}}
+Input  -> {'I2': {'wire1': '1DU26G0R0C'}}
+Output2 -> {'O': {'wire0': 'OXUOVJ5GU9', 'wire1': '1DU26G0R0C'}}
+Input2  -> {'I1': {'wire0': 'OXUOVJ5GU9'}, 'I2': {'wire1': '1DU26G0R0C'}}
+Output -> {'O': {'wire0': 'OXUOVJ5GU9', 'wire1': '1DU26G0R0C', 'wire2': '2PLVBKOL1X'}}
+Input  -> {'I3': {'wire2': '2PLVBKOL1X'}}
+Output2 -> {'O': {'wire0': 'OXUOVJ5GU9', 'wire1': '1DU26G0R0C', 'wire2': '2PLVBKOL1X'}}
+Input2  -> {'I1': {'wire0': 'OXUOVJ5GU9'}, 'I2': {'wire1': '1DU26G0R0C'}, 'I3': {'wire2': '2PLVBKOL1X'}}
+Output333333 -> {'inputs': {}, 'outputs': {'O': {'wire0': 'OXUOVJ5GU9', 'wire1': '1DU26G0R0C', 'wire2': '2PLVBKOL1X'}}, 'parameters': {}, 'frequency': 30.0}
+Input3333333 -> {'inputs': {'I1': {'wire0': 'OXUOVJ5GU9'}, 'I2': {'wire1': '1DU26G0R0C'}, 'I3': {'wire2': '2PLVBKOL1X'}}, 'outputs': {}, 'parameters': {}, 'frequency': 30.0}

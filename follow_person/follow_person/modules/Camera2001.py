@@ -76,6 +76,7 @@ def main(inputs, outputs, parameters, synchronise):
             if frame is not None:
                 outputs.share_image("Img", frame)
                 outputs.share_number("Width", frame.shape[1])
+                print("FOTO")
 
             synchronise()
     except Exception as e:

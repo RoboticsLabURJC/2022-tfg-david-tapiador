@@ -8,6 +8,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(gazebo REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(Threads REQUIRED)
 
@@ -24,6 +25,7 @@ target_include_directories(personplugin PUBLIC
 ament_target_dependencies(
   personplugin
   "rclcpp"
+  "gazebo"
   "pluginlib"
 )
 
