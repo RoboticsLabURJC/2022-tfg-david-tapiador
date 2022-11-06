@@ -10,7 +10,7 @@ def main(inputs, outputs, parameters, synchronise):
 
     try:
         while auto_enable or inputs.read_number('Enable'):
-            vels = [1,0,0,0,0,0]
+            vels = [0,0,0,0,0,0.5]
             to_write = np.array(vels, dtype='<U64')
             outputs.share_array("Vels", to_write)   
             synchronise()
