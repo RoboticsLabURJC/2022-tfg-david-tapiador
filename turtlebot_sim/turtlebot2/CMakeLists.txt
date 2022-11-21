@@ -21,7 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(urdf REQUIRED)
 find_package(xacro REQUIRED)
 
-install(DIRECTORY urdf launch
+install(DIRECTORY urdf launch worlds
   DESTINATION share/${PROJECT_NAME})
 
 
