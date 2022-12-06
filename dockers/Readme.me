@@ -1,0 +1,24 @@
+# Docker for real or simulated turtlebot2
+
+The docker uses Ubuntu 22.04 as base and includes ros2 humble (and gazebo11 in the simulated docker)
+
+## Usage
+To create the image, execute the script (real/sim depends on what you are working with).
+The script receives two parameters:
+- "-r" or "-s", which tells the script if you are working with the real robot or with a simulated one.
+- DOCKER_NAME, which will stablish the name of the docker. If the parameter is empty, the name will be "turtlebot2_real" or "turtlebot2_sim" depending on the previous parameter.
+~~~
+  sudo ./setup_real_docker.sh [-r/-s] [DOCKER_NAME]
+~~~
+
+To create the container:
+~~~
+  xhost +
+
+  sudo docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix turtlebot2
+~~~
+
+After stopping the container, use:
+~~~
+  xhost -
+~~~

@@ -1,0 +1,17 @@
+FROM ubuntu:22.04
+
+
+ARG WORKSPACE=/ros2_ws
+ARG DEBIAN_FRONTEND=noninteractive
+
+
+# Install CLI tools
+RUN apt-get update && apt-get install -y \
+  apt-utils \
+  build-essential \
+  curl \
+  git \
+  gnupg \
+  lsb-release \
+  python3 \
+  wget
