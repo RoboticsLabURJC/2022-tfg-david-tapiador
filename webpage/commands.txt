@@ -1,0 +1,39 @@
+En una terminal:
+
+$> sudo docker run --rm -it -p 6080:6080 turtlebot2
+
+En otra distina:
+
+$> sudo docker ps
+
+Del resultado, copiamos lo que ponga en el campo "CONTAINER ID" y lo pegamos en otras 2 o 3 terminales:
+
+$> sudo docker exec -it [CONTAINER_ID] /bin/bash
+
+
+Dentro de las terminales, escribimos lo siguiente:
+
+XServer en la terminal 1
+Term1 -> 
+	/usr/bin/Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xdummy.log -config /xorg.conf :0
+
+X11Vnc en la terminal 2
+Term2 -> 
+	x11vnc -display :0 -nopw -forever -xkb -rfbport 5900
+
+noVNC en la terminal 3
+Term3 -> 
+	/noVNC/utils/novnc_proxy --listen 6080 --vnc localhost:5900
+
+Debemos poner el valor de la variable de entorno "DISPLAY" al valor ":0" para mostar el docker por VNC
+Term4 -> 
+	export DISPLAY=:0
+
+Después ya podemos usar gazebo, rviz u otros comandos para ver desde VNC.
+
+
+Para conectarnos por VNC (html) tenemos que ir a la siguiente página en nuestro navegador favorito:
+	localhost:6080/vnc.html
+
+
+
