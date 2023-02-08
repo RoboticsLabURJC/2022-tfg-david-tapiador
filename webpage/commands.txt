@@ -44,8 +44,7 @@ Terms4 ->
 Después ya podemos usar gazebo, rviz u otros comandos para ver desde VNC.
 
 
-Para conectarnos por VNC (html) tenemos que ir a la siguiente página en nuestro navegador favorito:
-	localhost:6080/vnc.html
+Para conectarnos por VNC (html) tenemos que abrir el archivo "page_combo.html" desde nuestro navegador favorito.
 
 
 
