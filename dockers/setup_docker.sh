@@ -2,7 +2,7 @@
 
 # Check if number of arguments is not 1 or 2 or if the first argument is not -r or -s
 if ([ ! $# -eq 1 ] && [ ! $# -eq 2 ]) || ([ $1 != "-r" ] && [ $1 != "-s" ]); then
-    echo "usage: sudo ./setup_real_docker.sh [-r/-s] [DOCKER_NAME]"
+    echo "usage: sudo ./setup_docker.sh [-r/-s] [DOCKER_NAME]"
     exit
 fi
 

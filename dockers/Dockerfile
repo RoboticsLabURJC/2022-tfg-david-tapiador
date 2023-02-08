@@ -66,4 +66,9 @@ RUN colcon build --symlink-install
 
 RUN echo 'source /${WORKSPACE}/install/setup.sh' >> ~/.bashrc
 SHELL ["/bin/bash", "-c"]
-RUN . /${WORKSPACE}/install/setup.sh
+RUN . ${WORKSPACE}/install/setup.sh
+
+RUN apt-get install -y --reinstall xserver-xorg-video-intel xserver-xorg-core
+RUN dpkg-reconfigure xserver-xorg
+
+
