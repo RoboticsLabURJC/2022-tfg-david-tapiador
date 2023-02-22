@@ -1,0 +1,31 @@
+<input type="file" id="upload" />
+<a id="link" download>link to your file (upload a file first)</a>
+<script>
+    const input = document.getElementById('upload');
+    const link = document.getElementById('link');
+    let objectURL;
+
+    input.addEventListener('change', function () {
+    if (objectURL) {
+        // revoke the old object url to avoid using more memory than needed
+        URL.revokeObjectURL(objectURL);  
+    }
+
+    const file = this.files[0];
+    objectURL = URL.createObjectURL(file);
+
+    link.href = objectURL;
+    link.click()
+        var exec = require('child_process').exec;
+    });
+</script>
+<script>
+    exec('mv /home/tapi1300/Desktop/tfg/2022-tfg-david-tapiador/webpage/s.png /home/tapi1300/Desktop/s.png',
+        function (error, stdout, stderr) {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+    });
+</script>
