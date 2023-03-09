@@ -1,8 +1,12 @@
 En una terminal:
 
-$> sudo docker run --rm -it -p 6080:6080 -p 6081:6081 -p 6082:6082 -p 6083:6083  turtlebot2
+$> sudo docker run --rm -it -p 6080:6080 -p 6081:6081 -p 6082:6082 -p 6083:6083 -p 8080:6084  turtlebot2
 
-En otra distina:
+En otra distina ejecutar:
+
+$> ./launch.sh
+
+Dentro de launch lo que se ejecuta es lo siguiente:
 
 $> sudo docker ps
 
@@ -10,41 +14,29 @@ Del resultado, copiamos lo que ponga en el campo "CONTAINER ID" y lo pegamos en 
 
 $> sudo docker exec -it [CONTAINER_ID] /bin/bash
 
+Dentro de la terminal, escribimos lo siguiente:
 
-Dentro de las terminales, escribimos lo siguiente:
-
-XServer en las terminales 1
+XServer
 Terms1 -> 
 	/usr/bin/Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xdummy.log -config /xorg.conf :0
 	/usr/bin/Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xdummy.log -config /xorg.conf :1
 	/usr/bin/Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xdummy.log -config /xorg.conf :2
 	/usr/bin/Xorg -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./xdummy.log -config /xorg.conf :3
 
-X11Vnc en las terminales 2
+X11Vnc
 Terms2 -> 
 	x11vnc -display :0 -nopw -forever -xkb -rfbport 5900
 	x11vnc -display :1 -nopw -forever -xkb -rfbport 5901
 	x11vnc -display :2 -nopw -forever -xkb -rfbport 5902
 	x11vnc -display :3 -nopw -forever -xkb -rfbport 5903
 
-noVNC en las terminales 3
+noVNC
 Terms3 -> 
 	/noVNC/utils/novnc_proxy --listen 6080 --vnc localhost:5900
 	/noVNC/utils/novnc_proxy --listen 6081 --vnc localhost:5901
 	/noVNC/utils/novnc_proxy --listen 6082 --vnc localhost:5902
 	/noVNC/utils/novnc_proxy --listen 6083 --vnc localhost:5903
 
-Debemos poner el valor de la variable de entorno "DISPLAY" al valor ":0" para mostar el docker por VNC
-Terms4 -> 
-	export DISPLAY=:0
-	export DISPLAY=:1
-	export DISPLAY=:2
-	export DISPLAY=:3
-
-Después ya podemos usar gazebo, rviz u otros comandos para ver desde VNC.
 
 
-Para conectarnos por VNC (html) tenemos que abrir el archivo "page_combo.html" desde nuestro navegador favorito.
-
-
-
+Para visualizar el docker por VNC (html) tenemos que abrir el archivo "page_combo.html" desde nuestro navegador favorito.
