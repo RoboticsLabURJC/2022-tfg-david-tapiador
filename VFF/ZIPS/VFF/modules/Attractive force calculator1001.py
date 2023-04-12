@@ -14,7 +14,7 @@ def main(inputs, outputs, parameters, synchronise):
             if x_y_Yaw is not None:
                 a = 0
                 print("LEN -> " + str(len(x_y_Yaw)))
-                print("x_y_Yaw -> " + x_y_Yaw)
+                print("x_y_Yaw -> " + str(x_y_Yaw))
 
             synchronise()
     except Exception as e:

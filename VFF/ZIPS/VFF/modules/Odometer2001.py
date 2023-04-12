@@ -29,13 +29,9 @@ class OdometerSubscriber(Node):
         global odom
         odom[0] = msg.pose.pose.position.x
         odom[1] = msg.pose.pose.position.y
-        rot = Rotation.from_quat([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
-        rot_euler = rot.as_euler('xyz', degrees=True)
-        print("ROT -> " + rot.shape)
-        print("ROTE-> " + rot_euler.shape)
 
-        euler_df = pd.DataFrame(rot_euler, columns=['x', 'y', 'z'])
-        odom[2] = euler_df[2]
+        rot = Rotation.from_quat([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
+        odom[2] = rot.as_euler('xyz', degrees=True)[2]
 
 def main(inputs, outputs, parameters, synchronise):
     
@@ -52,12 +48,10 @@ def main(inputs, outputs, parameters, synchronise):
 
     try:
         while auto_enable or inputs.read_number('Enable'):
-            measure = None
+            
             rclpy.spin_once(odom_subscriber)
-
-            if measure is not None:
-                print("ODOM -> " + odom)
-                outputs.share_number("X-Y-Yaw",odom)
+            print("ODOM -> " + str(odom))
+            outputs.share_array("Odom",odom)
 
             synchronise()  
     except Exception as e:
