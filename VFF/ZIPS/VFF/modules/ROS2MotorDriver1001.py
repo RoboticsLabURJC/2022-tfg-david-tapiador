@@ -16,7 +16,7 @@ class VelPublisher(Node):
     def __init__(self, topic):
         super().__init__('vel_publisher')
         self.publisher_ = self.create_publisher(Twist, topic, 1)
-        timer_period = 0.5  # seconds
+        timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
@@ -55,10 +55,12 @@ def main(inputs, outputs, parameters, synchronise):
         while auto_enable or inputs.read_number('Enable'):
 
             velocities = inputs.read_array('Vels')
-            if velocities != None:
-                rclpy.spin_once(vel_publisher) 
-            synchronise()   
-    
+            try:
+                if velocities[0] != None:
+                    rclpy.spin_once(vel_publisher) 
+                synchronise() 
+            except Exception:
+                continue
     except KeyboardInterrupt:
 
         vel_publisher.destroy_node()

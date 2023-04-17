@@ -23,6 +23,7 @@ def main(inputs, outputs, parameters, synchronise):
                     actual = 0 
                 destination = dest_arr[actual]
                 outputs.share_array("Destination", destination)
+                print("NEW DESTINATION! " + str(destination))
                 first = False
 
     pass

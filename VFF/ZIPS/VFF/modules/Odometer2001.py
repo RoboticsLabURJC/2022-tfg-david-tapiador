@@ -50,7 +50,6 @@ def main(inputs, outputs, parameters, synchronise):
         while auto_enable or inputs.read_number('Enable'):
             
             rclpy.spin_once(odom_subscriber)
-            print("ODOM -> " + str(odom))
             outputs.share_array("Odom",odom)
 
             synchronise()  
