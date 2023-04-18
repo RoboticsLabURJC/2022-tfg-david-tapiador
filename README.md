@@ -4,4 +4,4 @@
 #### [Follow-person](https://roboticslaburjc.github.io/2022-tfg-david-tapiador/blog/15th_week/) (click on image for YT video)
 [![Follow-person](https://img.youtube.com/vi/IknpvAs_jAo/maxresdefault.jpg)](https://youtu.be/IknpvAs_jAo)
 #### [VFF](https://roboticslaburjc.github.io/2022-tfg-david-tapiador/blog/20th_week/) (click on image for YT video)
-[![VFF](https://img.youtube.com/vi/a6b5kD5teys/maxresdefault.jpg)](https://youtu.be/a6b5kD5teys)
+[![VFF](https://img.youtube.com/vi/T8QXnxTxpPU/maxresdefault.jpg)](https://youtu.be/T8QXnxTxpPU)
