@@ -1,0 +1,46 @@
+\chapter{Herramientas y plataforma de desarrollo}
+\label{cap:capitulo3}
+
+\vspace{1cm}
+
+Escribe aquí un párrafo explicando brevemente lo que vas a contar en este capítulo. En este capítulo, explica qué has usado a nivel hardware y software para poder desarrollar tu trabajo: librerías, sistemas operativos, plataformas, entornos de desarrollo, etc.
+
+\section{Lenguaje de programación}
+\label{sec:lenguaje_programación}
+
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+    print("Hello World")
+    \end{lstlisting}
+    \caption[Hola mundo en python]{Hola mundo en python}
+    \label{cod:holamundo_python}
+\end{code}
+
+
+\section{ROS2 (Robot Operating System 2)}
+\label{sec:ros2}
+
+ROS\footnote{\textbf{ROS}: \url{http://wiki.ros.org/es}} o Robot Operating System es un \textit{middleware}\footnote{{\textbf{Middleware}: software que se sitúa entre las aplicaciones y el sistema operativo}} formado por un conjunto de herramientas y librerías de software libre empleadas para el desarrollo de aplicaciones robóticas. Su objetivo es ofrecer una plataforma estándar para todas las ramas de la robótica.\\
+
+ROS se basa en una arquitectura \textit{cliente-servidor} centralizado que, mediante suscriptores y publicadores, permite enviar información, ya sean medidas de sensores, cambios de estado, decisiones usando árboles de decisión, órdenes a los actuadores, etc.\\
+
+Para comunicarse con los servidores (o como se llaman en ROS, "\textit{topics}) se usan nodos. Estos nodos pueden contar con varios publicadores y suscriptores simultáneaos.
+Cada \textit{topic} se define con un tipo de mensaje, que será el único que se pueda enviar y recibir a través de él. Estos tipos de mensajes pueden ser mensajes simples como una cadena de caracteres o tipos compuestos con otros tipos, permitiéndonos crear topics adecuados a las necesidades de cada proyecto.\\
+
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=7cm]{figs/c3/ros_comunicación.png}
+    \end{center}
+    \caption[Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores.]{Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores.. Imagen obtenida de \cite{comunicacion_ros2}}
+    \label{fig:ros_master_comunicacion}
+\end{figure}
+
+
+
+
+\section{Gazebo}
+\label{sec:gazebo}
+\section{Turtlebot2}
+\label{sec:turtlebot2}
+\section{VisualCircuit}
+\label{sec:visualcircuit}
