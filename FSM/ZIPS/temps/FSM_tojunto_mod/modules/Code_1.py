@@ -91,11 +91,11 @@ def main(inputs, outputs, parameters, synchronise):
                 final_w = alpha_W*attr_y_print + beta_W*rep_y
 
 
-                if(final_v < 0):
+                if(final_v < 0 and final_w < 0.3 and final_w > 0.3):
                     # Rotar en el sitio hasta que no sea sentido opuesto
                     final_v = 0
                     final_w = max_w/3
-                if(final_v > max_v):
+                elif(final_v > max_v):
                     final_v = max_v
                 elif(final_v < min_v):
                     final_v = min_v
@@ -107,11 +107,11 @@ def main(inputs, outputs, parameters, synchronise):
 
 
                 # Display vels, attr and rep in grid
-                cv2.putText(temp, "V = " + str(round(final_v,2)),(w-int(w/(lines)*5),h-int(h/(lines)*2)), cv2.FONT_ITALIC, 0.7, (255, 0, 0), 2)
-                cv2.putText(temp, "W = " + str(round(final_w,2)),(w-int(w/(lines)*5),h-int(h/(lines)*1)), cv2.FONT_ITALIC, 0.7, (255, 0, 0), 2)
+                cv2.putText(temp, "V = " + str(round(final_v,2)),(w-int(w/(lines)*5),h-int(h/(lines)*2)), cv2.FONT_ITALIC, 0.7, (0, 123, 255), 2)
+                cv2.putText(temp, "W = " + str(round(final_w,2)),(w-int(w/(lines)*5),h-int(h/(lines)*1)), cv2.FONT_ITALIC, 0.7, (0, 123, 255), 2)
 
-                cv2.putText(temp, "Attr = " + str(round(attr_y_print,2)),(w-int(w/(lines)*5),h-int(h/(lines)*4)), cv2.FONT_ITALIC, 0.7, (0, 0, 255), 2)
-                cv2.putText(temp, "Rep  = " + str(round(-rep_y,2)),(w-int(w/(lines)*5),h-int(h/(lines)*3)), cv2.FONT_ITALIC, 0.7, (100, 0, 100), 2)
+                cv2.putText(temp, "Attr = " + str(round(attr_y_print,2)),(w-int(w/(lines)*5),h-int(h/(lines)*4)), cv2.FONT_ITALIC, 0.7, (0, 255, 0), 2)
+                cv2.putText(temp, "Rep  = " + str(round(-rep_y,2)),(w-int(w/(lines)*5),h-int(h/(lines)*3)), cv2.FONT_ITALIC, 0.7, (0, 0, 255), 2)
 
                 #Display Robot position and coords
                 cv2.putText(temp, str([round(odom[0],2),round(odom[1],2)]), (int((odom[0]-x[0])*(w/lines)+(w/lines/2)),int(h-(odom[1]-y[0])*(h/lines)-(h/lines/2))), cv2.FONT_ITALIC, 0.7, (255, 0, 0), 2)
@@ -131,72 +131,57 @@ def main(inputs, outputs, parameters, synchronise):
 
 
 
-                #Display arrows for attractive force (red)
+                #Display arrows for attractive force (green)
                 cv2.arrowedLine(temp,
                         (int((odom[0]-x[0])*(w/lines)),
                             int(h-(odom[1]-y[0])*(h/lines))),
                         (int(math.cos(math.pi/2-((dest[0]-odom[0])/math.sqrt(pow(attr_x,2)+pow(attr_y,2))))
                                 * math.sqrt(pow(attr_x,2)+pow(attr_y,2))
-                                * 20 * beta_W
+                                * 10 * beta_W
                                 + (odom[0]-x[0])*(w/lines)),
                             int(math.sin(-(dest[1]-odom[1])/math.sqrt(pow(attr_x,2)+pow(attr_y,2)))
                                 * math.sqrt(pow(attr_x,2)+pow(attr_y,2))
-                                * 20 * beta_W
+                                * 10 * beta_W
                                 + h-(odom[1]-y[0])*(h/lines))),
-                        (0, 0, 255), 3, 8, 0, 0.3)
+                        (0, 255, 0), 3, 8, 0, 0.3)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-                #Display arrows for repuslive force (brown)
+                #Display arrows for repuslive force (red)
                 if(rep_x != 0 and rep_y != 0):
                     cv2.arrowedLine(temp,
                             (int((odom[0]-x[0])*(w/lines)),
                                 int(h-(odom[1]-y[0])*(h/lines))),
-                            (int(math.cos(math.radians(odom[2]))
-                                    * rep_x
-                                    * 40 * alpha_W
+                            (int(math.cos(math.radians(odom[2])+math.acos(rep_x/math.sqrt(pow(rep_x,2)+pow(rep_y,2))))
+                                    * math.sqrt(pow(rep_x,2)+pow(rep_y,2))
+                                    * 60 * alpha_W
                                     + (odom[0]-x[0])*(w/lines)),
-                                int(math.sin(math.radians(odom[2]))
-                                    * rep_y
-                                    * 40 * alpha_W
+                                int(math.sin(-math.radians(odom[2])-math.asin(rep_y/math.sqrt(pow(rep_x,2)+pow(rep_y,2))))
+                                    * math.sqrt(pow(rep_x,2)+pow(rep_y,2))
+                                    * 60 * alpha_W
                                     + h-(odom[1]-y[0])*(h/lines))),
-                            (100, 0, 100), 3, 8, 0, 0.3)
-
-
-                # #Display arrows for repuslive force (brown)
-                # if(rep_x != 0 and rep_y != 0):
-                #     cv2.arrowedLine(temp,
-                #             (int((odom[0]-x[0])*(w/lines)),
-                #                 int(h-(odom[1]-y[0])*(h/lines))),
-                #             (int(math.cos(math.radians(odom[2]))
-                #                     * math.sqrt(pow(rep_x,2)+pow(rep_y,2))
-                #                     * 40 * alpha_W
-                #                     + (odom[0]-x[0])*(w/lines)),
-                #                 int(math.sin(math.radians(odom[2]))
-                #                     * math.sqrt(pow(rep_x,2)+pow(rep_y,2))
-                #                     * 40 * alpha_W
-                #                     + h-(odom[1]-y[0])*(h/lines))),
-                #             (100, 0, 100), 3, 8, 0, 0.3)
+                            (0, 0, 255), 3, 8, 0, 0.3)
 
 
 
 
 
-
-
-
-
+                #Display arrows for result force (orange)
+                if(final_v != 0 and final_w != 0):
+                    cv2.arrowedLine(temp,
+                            (int((odom[0]-x[0])*(w/lines)),
+                                int(h-(odom[1]-y[0])*(h/lines))),
+                            (int(math.cos(math.radians(odom[2])+math.acos(final_v/math.sqrt(pow(final_v,2)+pow(final_w,2))))
+                                    * math.sqrt(pow(final_v,2)+pow(final_w,2))
+                                    * 60
+                                    + (odom[0]-x[0])*(w/lines)),
+                                int(math.sin(-(math.radians(odom[2])+math.asin(final_w/math.sqrt(pow(final_v,2)+pow(final_w,2)))))
+                                    * math.sqrt(pow(final_v,2)+pow(final_w,2))
+                                    * 60
+                                    + h-(odom[1]-y[0])*(h/lines))),
+                        (0, 123, 255), 3, 8, 0, 0.3)
 
 
 

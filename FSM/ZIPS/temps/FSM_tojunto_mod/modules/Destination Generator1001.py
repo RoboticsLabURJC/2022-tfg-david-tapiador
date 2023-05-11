@@ -1,5 +1,6 @@
 def main(inputs, outputs, parameters, synchronise):
     margen = 1
+    changed = False
     while 1:
         try:
             Enable = inputs.read_number("Enable")
@@ -14,9 +15,12 @@ def main(inputs, outputs, parameters, synchronise):
                         outputs.share_number("AutoEnable", 0)
                         outputs.share_number("Next", 1)
                         first = False
+                        changed = True
                     else:
                         outputs.share_number("AutoEnable", 1)
                         outputs.share_number("Next", 0)
+            else:
+                changed = True
         except Exception:
             continue
     pass

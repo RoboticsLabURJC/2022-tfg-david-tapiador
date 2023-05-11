@@ -1,3 +1,5 @@
+import time
+
 def main(inputs, outputs, parameters, synchronise):
     
     dest = [2,10]
@@ -7,7 +9,8 @@ def main(inputs, outputs, parameters, synchronise):
         while 1:
             enable = inputs.read_number("Enable")
             if enable == 1 and first:
-                    print("VOLVEMOS AL ORIGEN -> " + str(dest))
+                    print("UBICACIÓN DEL ORIGEN -> " + str(dest))
+                    time.sleep(2)
                     outputs.share_array("Dest", dest)
                     outputs.share_number("Next", 1)
                     first = False

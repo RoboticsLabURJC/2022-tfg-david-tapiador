@@ -1,4 +1,5 @@
 from random import randint
+import time
 
 def main(inputs, outputs, parameters, synchronise):
     
@@ -29,6 +30,7 @@ def main(inputs, outputs, parameters, synchronise):
                     times += 1
 
                     if(times < max_times):
+                        print("***ESTADO ACTIVADO -> GENERAR UBICACIÓN ALEATORIA***")
                         dest = [randint(x[0]+1, x[1]-1),
                                     randint(y[0]+1,y[1]-1)]
 
@@ -36,13 +38,17 @@ def main(inputs, outputs, parameters, synchronise):
                             dest[0] = randint(x[0]+1, x[1]-1)
                         while dest[1] > int(odom[1]-margen) and dest[1] < int(odom[1]+margen):
                             dest[1] = randint(y[0]+1,y[1]-1)
-
+                            
                         print("NUEVO DESTINO -> " + str(dest))
+                        time.sleep(2)
+
+                        print("***ESTADO ACTIVADO -> VFF***")
                         outputs.share_array("Dest", dest)
                         outputs.share_number("Next", uno)
                         outputs.share_number("Last", zero)
 
                     else:
+                        print("***ESTADO ACTIVADO -> VUELTA AL ORIGEN***")
                         outputs.share_number("Next", zero)
                         outputs.share_number("Last", uno)
 
