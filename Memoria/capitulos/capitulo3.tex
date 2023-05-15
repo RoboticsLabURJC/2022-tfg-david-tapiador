@@ -28,14 +28,14 @@ ROS\footnote{\textbf{ROS}: \url{http://wiki.ros.org/es}} o Robot Operating Syste
 
 ROS se basa en una arquitectura \textit{cliente-servidor} centralizado que, mediante suscriptores y publicadores, permite enviar información, ya sean medidas de sensores, cambios de estado, decisiones usando árboles de decisión, órdenes a los actuadores, etc.\\
 
-Para comunicarse con los servidores (o como se llaman en ROS, "\textit{topics}) se usan nodos. Estos nodos pueden contar con varios publicadores y suscriptores simultáneaos.
+Para comunicarse con los servidores (o como se llaman en ROS, \textit{topics}) se usan nodos. Estos nodos pueden contar con varios publicadores y suscriptores simultáneaos.
 Cada \textit{topic} se define con un tipo de mensaje, que será el único que se pueda enviar y recibir a través de él. Estos tipos de mensajes pueden ser mensajes simples como una cadena de caracteres o tipos compuestos con otros tipos, permitiéndonos crear topics adecuados a las necesidades de cada proyecto.\\
 
 \begin{figure} [H]
     \begin{center}
         \includegraphics[width=7cm]{figs/c3/ros_comunicación.png}
     \end{center}
-    \caption[Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores.]{Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores.. Imagen obtenida de \cite{comunicacion_ros2}}
+    \caption[Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores.]{Comunicación del nodo Master con los nodos Intermedios y con distintos sensores y actuadores. Imagen obtenida de \cite{comunicacion_ros2}}
     \label{fig:ros_master_comunicacion}
 \end{figure}
 
@@ -186,7 +186,7 @@ VisualCircuit\footnote{\textbf{VisualCircuit Docs}: \url{https://jderobot.github
 
 Los bloques que se pueden usar están divididos en varias pestañas: \textit{basics}, \textit{processing} y \textit{drivers}.\\
 En la primera pestaña, podemos encontrar bloques simples, como inputs y outputs, bloques para definir parámetros y constantes, o bloques para insertar nuestro código.\\
-En la pestaña de procesamiento, donde encontramos otros tres desplegables para bloques de control (PID), bloques relacionados con OpenCV y edición de imagen (filtros de color, detección de contornos, erosión, etc), y el último corresponde a \textit{TensorFlow}, que contiene un bloque para detección de objetos.\\
+En la pestaña de procesamiento, donde encontramos otros tres desplegables para bloques de control (PID), bloques relacionados con OpenCV\footnote{\textbf{OpenCV}: \url{https://opencv.org/}} y edición de imagen (filtros de color, detección de contornos, erosión, etc), y el último corresponde a \textit{TensorFlow}, que contiene un bloque para detección de objetos.\\
 En la última pestaña, están los drivers que conectan con los sensores y actuadores: motor (ROS y ROS2), lector de imagenes desde archivos y desde cámaras, pantalla para mostrar las imágenes e incluso cámaras usando ROS.\\
 
 \newpage

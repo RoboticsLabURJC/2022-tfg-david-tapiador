@@ -1,5 +1,25 @@
 \chapter{Desarrollo de bloques driver}
 \label{cap:capitulo4}
+Como ya he explicado, VisualCircuit es una plataforma de programación online mediante el uso de bloques, pero para que esté actualizado, hay que ir añadiendo bloques nuevos que ofrezcan esas nuevas funciones y añadirlos a las listas de bloques estándar que ofrece la página.\\
+En este capítulo profundizaremos en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos bloques para poder añadir ROS2 a la misma.
+
+
+\section{Introducción a VisualCircuit}
+\label{sec:VC_intro}
+
+En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores (cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS melodic\footnote{\textbf{ROS melodic}: \url{http://wiki.ros.org/melodic}}, pero al tratarse de una versión antigua, decidimos que ya era momento de actualizar a ROS2 humble\footnote{\textbf{ROS humble}: \url{https://docs.ros.org/en/humble/index.html}}, ya que era la versión estable más moderna hasta el momento.\\
+Para crear nuestro propio bloque, debemos añadir varios bloques prefabricados. Para bloque donde estará el código principal usaremos el bloque 
+
+
+\newpage
+
+\begin{figure} [H]
+  \begin{center}
+      \includegraphics[width=7cm]{figs/c4/VC_pre_codeblock.png}
+  \end{center}
+  \caption[Creando un bloque en VisualCircuit]{Creando un bloque en VisualCircuit.}
+  \label{fig:VC_creando_bloque}
+\end{figure}
 
 
 
@@ -9,17 +29,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-El desarrollo de nuevo contenido para la plataforma de VisualCircuit, ha necesitado usar distintas herramientas, como por ejemplo programación, ROS2, gazebo..., por lo que voy a hacer una pequeña descripción de cada una, así como el uso que se le ha dado dentro del proyecto.
 
 \section{Snippets}
 
