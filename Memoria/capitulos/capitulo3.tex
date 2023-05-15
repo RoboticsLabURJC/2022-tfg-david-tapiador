@@ -1,7 +1,7 @@
 \chapter{Herramientas y plataforma de desarrollo}
 \label{cap:capitulo3}
 
-El desarrollo de nuevo contenido para la plataforma de VisualCircuit, ha necesitado usar distintas herramientas, como por ejemplo programación, ROS2, gazebo..., por lo que voy a hacer una pequeña descripción de la utilidad de cada una, así como el uso que se le ha dado dentro del proyecto.
+El desarrollo de nuevo contenido para la plataforma de VisualCircuit, ha necesitado usar distintas herramientas, como por ejemplo programación, ROS2, gazebo..., por lo que voy a hacer una pequeña descripción de cada una, así como el uso que se le ha dado dentro del proyecto.
 
 \section{Lenguaje de programación}
 \label{sec:lenguaje_programación}
@@ -170,13 +170,35 @@ Se trata de un láser de 360º con un rango de medida desde 0.2m hasta 16m y una
     \label{fig:rplidar}
 \end{figure}
 
-
 \section{VisualCircuit}
 \label{sec:visualcircuit}
 % ** VISUALCIRCUIT
 
-VisualCircuit\footnote{\textbf{VisualCircuit Docs}: \url{https://jderobot.github.io/VisualCircuit/}} es un editor visual online basado en programación por bloques de código orientado al desarrollo de aplicaciones robóticas. Está desarrollado sobre IceStudio\footnote{\textbf{IceStudio Project}: \url{https://github.com/FPGAwars/icestudio}}.
-Los bloques que se 
+VisualCircuit\footnote{\textbf{VisualCircuit Docs}: \url{https://jderobot.github.io/VisualCircuit/}} es un editor visual online basado en programación por bloques de código orientado al desarrollo de aplicaciones robóticas. Está desarrollado sobre IceStudio\footnote{\textbf{IceStudio Project}: \url{https://github.com/FPGAwars/icestudio}}.\\
+
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=13cm]{figs/c3/empty_VC.png}
+    \end{center}
+    \caption[VisualCircuit]{Página de VisualCircuit.}
+    \label{fig:VC_empty}
+\end{figure}
+
+Los bloques que se pueden usar están divididos en varias pestañas: \textit{basics}, \textit{processing} y \textit{drivers}.\\
+En la primera pestaña, podemos encontrar bloques simples, como inputs y outputs, bloques para definir parámetros y constantes, o bloques para insertar nuestro código.\\
+En la pestaña de procesamiento, donde encontramos otros tres desplegables para bloques de control (PID), bloques relacionados con OpenCV y edición de imagen (filtros de color, detección de contornos, erosión, etc), y el último corresponde a \textit{TensorFlow}, que contiene un bloque para detección de objetos.\\
+En la última pestaña, están los drivers que conectan con los sensores y actuadores: motor (ROS y ROS2), lector de imagenes desde archivos y desde cámaras, pantalla para mostrar las imágenes e incluso cámaras usando ROS.\\
+
+\newpage
+Ésta será la herramienta principal en torno a la que girará este proyecto, tanto buscando añadir funcionalidades como en desarrollar aplicaciones con ella.
+
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=13cm]{figs/c3/VC_example.png}
+    \end{center}
+    \caption[Ejemplo VisualCircuit]{Ejemplo de proyecto de VisualCircuit.}
+    \label{fig:ex_VC}
+\end{figure}
 
 
 
