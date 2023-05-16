@@ -143,8 +143,7 @@ Como hemos mencionado anteriormente, un robot se compone, a grandes rasgos, de s
 \subsection{Cámara ASUS Xtion Pro}
 \label{subsec:asus_xtion}
 % ** ASUS XTION
-La cámara \textit{ASUS Xtion} es una cámara RGB-D\footnote{\textbf{RGB-D}: RedGreenBlue-Depth, hace referencia las cámaras que captan la imagen y las distancias de cada pixel.}, que ofrece tanto imagen como una nube de puntos con la distancia medida para cada pixel de la imagen.
-Esta cámara ofrece una imágen de 720p, con una frecuencia de 60fps. En la parte de profundidad, es capaz de captar desde 0.8m hasya 3.5 con un ángulo efectivo de 70º. Se conecta mediante USB directamente al ordenador.\\
+La cámara \textit{ASUS Xtion} es una cámara RGB-D\footnote{\textbf{RGB-D}: RedGreenBlue-Depth, hace referencia las cámaras que captan la imagen y las distancias de cada pixel.}, que ofrece tanto imagen como una nube de puntos con la distancia medida para cada pixel de la imagen. Esta cámara ofrece una imágen de 720p, con una frecuencia de 60fps. En la parte de profundidad, es capaz de captar desde 0.8m hasya 3.5 con un ángulo efectivo de 70º. Se conecta mediante USB directamente al ordenador.\\
 En el proyecto, como debemos usarla con ROS2, usaremos el paquete creado por un usuario de internet\footnote{\textbf{Drivers ASUS-Xtion ROS2}: \url{https://github.com/mgonzs13/ros2_asus_xtion}}.\\
 \begin{figure} [H]
     \begin{center}
@@ -153,8 +152,6 @@ En el proyecto, como debemos usarla con ROS2, usaremos el paquete creado por un 
     \caption[Cámara ASUS-XTION]{Cámara ASUS-XTION. Imagen obtenida de \cite{asus_xtion}}
     \label{fig:asus_xtion}
 \end{figure}
-
-
 
 \subsection{RPLIDAR A2}
 \label{subsec:rplidar_a2}
@@ -185,11 +182,24 @@ VisualCircuit\footnote{\textbf{VisualCircuit Docs}: \url{https://jderobot.github
 \end{figure}
 
 Los bloques que se pueden usar están divididos en varias pestañas: \textit{basics}, \textit{processing} y \textit{drivers}.\\
-En la primera pestaña, podemos encontrar bloques simples, como inputs y outputs, bloques para definir parámetros y constantes, o bloques para insertar nuestro código.\\
-En la pestaña de procesamiento, donde encontramos otros tres desplegables para bloques de control (PID), bloques relacionados con OpenCV\footnote{\textbf{OpenCV}: \url{https://opencv.org/}} y edición de imagen (filtros de color, detección de contornos, erosión, etc), y el último corresponde a \textit{TensorFlow}, que contiene un bloque para detección de objetos.\\
-En la última pestaña, están los drivers que conectan con los sensores y actuadores: motor (ROS y ROS2), lector de imagenes desde archivos y desde cámaras, pantalla para mostrar las imágenes e incluso cámaras usando ROS.\\
+\begin{itemize}
+    \item \textit{Basic:} bloques simples, como inputs y outputs, bloques para definir parámetros y constantes, o bloques para insertar nuestro código.
+    \item \textit{Processing:}
+    \begin{itemize}
+        \item \textit{Control:} bloques de control (PID).
+        \item \textit{OpenCV:} bloques relacionados con OpenCV\footnote{\textbf{OpenCV}: \url{https://opencv.org/}} y edición de imagen (filtros de color, detección de contornos, erosión, etc).
+        \item \textit{TensorFlow:}un bloque para detección de objetos.
+    \end{itemize}\
 
 \newpage
+    \item \textit{Drivers:} drivers que conectan con los sensores y actuadores
+    \begin{itemize}
+        \item \textit{Control:} motordriver (ROS) y teleoperador.
+        \item \textit{OpenCV:} lector de imagenes desde archivos y desde cámaras, pantalla para mostrar las imágenes.
+        \item \textit{ROS-Sensors:}  cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit} usando ROS.
+    \end{itemize}\
+\end{itemize}\
+
 Ésta será la herramienta principal en torno a la que girará este proyecto, tanto buscando añadir funcionalidades como en desarrollar aplicaciones con ella.
 
 \begin{figure} [H]
