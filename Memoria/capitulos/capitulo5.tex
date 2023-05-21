@@ -1,32 +1,41 @@
 \chapter{Sigue personas}
 \label{cap:capitulo5}
+Ahora que ya tenemos integrado ROS2 dentro de la plataforma de VisualCircuit, vamos a crear varios proyectos usando los bloques drivers que hemos creado. El primero de ellos será un comportamiento de \textit{follow-person} usando reconocimiento visual.
 
-\begin{flushright}
-\begin{minipage}[]{10cm}
-\emph{Quizás algún fragmento de libro inspirador...}\\
-\end{minipage}\\
+\section{Desarrollo inicial sigue-personas}
+\label{sec:VC_intro}
 
-Autor, \textit{Título}\\
-\end{flushright}
+En primer lugar, debemos preparar el entorno de pruebas, por lo que aprovecharemos un modelo de persona teleoperada que creó Carlos Caminero\footnote{\url{https://github.com/RoboticsLabURJC/2021-tfg-carlos-caminero/tree/main/amazon_hospital/hospital_world}}, compañero de la carrera.
 
-\vspace{1cm}
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=8cm]{figs/c5/elman.png}
+    \end{center}
+    \caption[Modelo de persona en gazebo]{Modelo de persona teleoperable en gazebo.}
+    \label{fig:teleop_person}
+\end{figure}
 
-Escribe aquí un párrafo explicando brevemente lo que vas a contar en este capítulo, que básicamente será una recapitulación de los problemas que has abordado, las soluciones que has prouesto, así como los experimentos llevados a cabo para validarlos. Y con esto, cierras la memoria.
+El mundo que tenía Carlos creado incluía muchos elementos del entorno que no son necesarios en nuestro caso, por lo que modificaremos el mundo para dejar únicamente al robot y a la persona. El modelo del robot que usaremos será el que mencionamos en el capítulo \ref{subsec:turtlebot2_sim}, ya que incluye tanto cámara como láser.\\
 
-\section{Conclusiones}
+Para desarrollar el comportamiento sigue-persona con VisualCircuit, 
 
-Enumera los objetivos y cómo los has cumplido.\\
 
-Enumera también los requisitos implícitos en la consecución de esos objetivos, y cómo se han satisfecho.\\
 
-No olvides dedicar un par de párrafos para hacer un balance global de qué has conseguido, y por qué es un avance respecto a lo que tenías inicialmente. Haz mención expresa de alguna limitación o peculiaridad de tu sistema y por qué es así. Y también, qué has aprendido desarrollando este trabajo.\\
 
-Por último, añade otro par de párrafos de líneas futuras; esto es, cómo se puede continuar tu trabajo para abarcar una solución más amplia, o qué otras ramas de la investigación podrían seguirse partiendo de este trabajo, o cómo se podría mejorar para conseguir una aplicación real de este desarrollo (si es que no se ha llegado a conseguir).
 
-\section{Corrector ortográfico}
 
-Una vez tengas todo, no olvides pasar el corrector ortográfico de \LaTeX a todos tus ficheros \textit{.tex}. En \texttt{Windows}, el propio editor \texttt{TeXworks} incluye el corrector. En \texttt{Linux}, usa \texttt{aspell} ejecutando el siguiente comando en tu terminal:
 
-\begin{verbatim}
-aspell --lang=es --mode=tex check capitulo1.tex
-\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
