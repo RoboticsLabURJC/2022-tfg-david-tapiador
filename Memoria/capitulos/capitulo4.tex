@@ -1,13 +1,19 @@
 \chapter{Desarrollo de bloques driver}
 \label{cap:capitulo4}
-Como ya he explicado, VisualCircuit es una plataforma de programación online mediante el uso de bloques, pero para que esté actualizado, hay que ir añadiendo bloques nuevos que ofrezcan esas nuevas funciones y añadirlos a las listas de bloques estándar que ofrece la página.\\
-En este capítulo profundizaremos en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos bloques para poder añadir ROS2 a la misma.
+Como ya he explicado, VisualCircuit es una plataforma de programación online mediante el uso de bloques, pero para que esté actualizado,
+hay que ir añadiendo bloques nuevos que ofrezcan esas nuevas funciones y añadirlos a las listas de bloques estándar que ofrece la página.\\
+En este capítulo profundizaremos en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos
+bloques para poder añadir ROS2 a la misma.
 
 
 \section{Introducción a VisualCircuit}
 \label{sec:VC_intro}
 
-En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores (cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS melodic\footnote{\textbf{ROS melodic}: \url{http://wiki.ros.org/melodic}}, pero al tratarse de una versión antigua, decidimos que ya era momento de actualizar a ROS2 humble\footnote{\textbf{ROS humble}: \url{https://docs.ros.org/en/humble/index.html}}, ya que era la versión estable más moderna hasta el momento.
+En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores
+(cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS
+melodic\footnote{\textbf{ROS melodic}: \url{http://wiki.ros.org/melodic}}, pero al tratarse de una versión antigua, decidimos que ya era
+momento de actualizar a ROS2 humble\footnote{\textbf{ROS humble}: \url{https://docs.ros.org/en/humble/index.html}}, ya que era la versión estable
+más moderna hasta el momento.
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=9cm]{figs/c4/VC_pre_codeblock.png}
@@ -16,9 +22,11 @@ En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicado
   \label{fig:VC_creando_bloque}
 \end{figure}
 
-Para crear nuestro propio bloque, debemos añadir varios bloques prefabricados. Para introducir nuestro código principal usaremos el bloque \textit{code}, como se puede ver en la figura \ref{fig:VC_creando_bloque}. Al crearlo, se nos permite definir el número de entradas, salidas y parámetros que tendrá nuestro código.
+Para crear nuestro propio bloque, debemos añadir varios bloques prefabricados. Para introducir nuestro código principal usaremos el bloque \textit{code},
+como se puede ver en la figura \ref{fig:VC_creando_bloque}. Al crearlo, se nos permite definir el número de entradas, salidas y parámetros que tendrá nuestro código.
 
-Una vez definidos, tenemos que usar bloques de \textit{Input}, \textit{Output} y \textit{Constant} y así, usando ``\textit{Save as}'', podemos exportarlo para usarlo como un bloque nuevo.
+Una vez definidos, tenemos que usar bloques de \textit{Input}, \textit{Output} y \textit{Constant} y así, usando ``\textit{Save as}'',
+podemos exportarlo para usarlo como un bloque nuevo.
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=10cm]{figs/c4/VC_saveas.png}
@@ -27,7 +35,8 @@ Una vez definidos, tenemos que usar bloques de \textit{Input}, \textit{Output} y
   \label{fig:VC_saveas_bloque}
 \end{figure}
 
-Cuando tengamos varios bloques generados, podemos usar la opción \textit{FILE} \overrightarrow{ } \textit{Add as block} para añadir como nuevos bloques los que acabamos de crear y así formar un circuito completo con el comportamiento que queramos.
+Cuando tengamos varios bloques generados, podemos usar la opción \textit{FILE} \overrightarrow{ } \textit{Add as block} para añadir como nuevos bloques
+los que acabamos de crear y así formar un circuito completo con el comportamiento que queramos.
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=10cm]{figs/c4/VC_example.png}
@@ -36,14 +45,19 @@ Cuando tengamos varios bloques generados, podemos usar la opción \textit{FILE} 
   \label{fig:VC_example}
 \end{figure}
 
-Este es el funcionamiento general que debemos de seguir para usar VisualCircuit. Ahora, para crear bloques drivers nuevos para usar con ROS2 debemos centrarnos más en el código.
+Este es el funcionamiento general que debemos de seguir para usar VisualCircuit. Ahora, para crear bloques drivers nuevos para usar con ROS2
+debemos centrarnos más en el código.
 
 \section{Creación de bloques drivers}
 \label{sec:drivers_creacion}
 
-Los bloques drivers que vamos a desarrollar son para implementar la cámara, el láser y los motores usando un topic de ROS2. Para los sensores (cámara y laser) tenemos que crear la estructura que queremos seguir, ya que ambos serán similares entre sí.\\
+Los bloques drivers que vamos a desarrollar son para implementar la cámara, el láser y los motores usando un topic de ROS2.
+Para los sensores (cámara y laser) tenemos que crear la estructura que queremos seguir, ya que ambos serán similares entre sí.\\
 
-Usando un \textit{input} para activar/desactivar el bloque habilitaremos el uso de máquinas de estados con nuestro bloque. También queremos compartir la medida del sensor, por lo que añadimos un \textit{output}. Por último, usamos una constante donde definiremos el \textit{topic} del que obtendremos las lecturas del sensor. Esto lo hacemos para que el usuario no tenga que cambiar el código del bloque para cambiar el \textit{topic} del que obtiene la información.\\
+Usando un \textit{input} para activar/desactivar el bloque habilitaremos el uso de máquinas de estados con nuestro bloque.
+También queremos compartir la medida del sensor, por lo que añadimos un \textit{output}. Por último, usamos una constante donde definiremos
+el \textit{topic} del que obtendremos las lecturas del sensor. Esto lo hacemos para que el usuario no tenga que cambiar el código del bloque para cambiar
+el \textit{topic} del que obtiene la información.\\
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=10cm]{figs/c4/VC_driver_blocks.png}
@@ -52,7 +66,9 @@ Usando un \textit{input} para activar/desactivar el bloque habilitaremos el uso 
   \label{fig:VC_driver_model}
 \end{figure}
 
-En cuanto al código que usaremos, seguiremos las indicaciones de los manuales de ROS2-humble\footnote{\url{https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html\#write-the-subscriber-node}} para usar nodos suscriptores/publicadores con python. El código general para los bloques de sensores (suscriptores) será el siguiente:
+En cuanto al código que usaremos, seguiremos las indicaciones de los manuales de
+ROS2-humble\footnote{\url{https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html\#write-the-subscriber-node}}
+para usar nodos suscriptores/publicadores con python. El código general para los bloques de sensores (suscriptores) será el siguiente:
 
 \begin{code}[H]
   \begin{lstlisting}[language=python]
@@ -109,7 +125,9 @@ En cuanto al código que usaremos, seguiremos las indicaciones de los manuales d
   \label{cod:bloques_drivers_sensors_total}
 \end{code}
 
-Si lo analizamos por partes, la clase \textbf{\textit{SENSORSubscriber}} (código \ref{cod:bloques_drivers_sensors_node_class}) contiene una función para inicializar la clase, donde se define el nombre del nodo, se crea el suscriptor y se inicia el suscriptor, y una función callback a la que se llamará de forma periódica, actualizando el valor de la variable global a la última medida del sensor.
+Si lo analizamos por partes, la clase \textbf{\textit{SENSORSubscriber}} (código \ref{cod:bloques_drivers_sensors_node_class}) contiene una función
+para inicializar la clase, donde se define el nombre del nodo, se crea el suscriptor y se inicia el suscriptor, y una función callback a la que se
+llamará de forma periódica, actualizando el valor de la variable global a la última medida del sensor.
 
 \begin{code}[H]
   \begin{lstlisting}[language=python]
@@ -131,8 +149,11 @@ Si lo analizamos por partes, la clase \textbf{\textit{SENSORSubscriber}} (códig
   \label{cod:bloques_drivers_sensors_node_class}
 \end{code}
 
-En la función main (código \ref{cod:bloques_drivers_sensors_main_general}) tenemos dos partes, la secuencia \textit{try-except} donde se declara si se está usando una maquina de estados (\textit{enable}) o si debe estar activo constantemente (\textit{autoenable} al haber dado error la lectura del cable de \textit{enable}).
-En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable global y se llama a \textit{``rclpy.spin\_once()"} para obtener la última medida del sensor y compartirla por el cable \textit{``output"}.
+En la función main (código \ref{cod:bloques_drivers_sensors_main_general}) tenemos dos partes, la secuencia \textit{try-except} donde se declara
+si se está usando una maquina de estados (\textit{enable}) o si debe estar activo constantemente (\textit{autoenable} al haber dado error la lectura
+del cable de \textit{enable}).
+En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable global y se llama a \textit{``rclpy.spin\_once()"} para obtener la
+última medida del sensor y compartirla por el cable \textit{``output"}.
 
 \begin{code}[H]
   \begin{lstlisting}[language=python]
@@ -157,10 +178,13 @@ En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable g
   \label{cod:bloques_drivers_sensors_main_general}
 \end{code}
 
-Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara y con el láser. Para ello, cambiaremos el tipo de mensaje que se envía, y haremos que el \textit{callback} obtenga del mensaje de ROS sólo la información que nos interesa, ya que éste viene con cabeceras y otros datos.\\
+Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara y con el láser. Para ello,
+cambiaremos el tipo de mensaje que se envía, y haremos que el \textit{callback} obtenga del mensaje de ROS sólo la información que nos interesa,
+ya que éste viene con cabeceras y otros datos.\\
 
 % *********CÁMARA
-Para el bloque correspondiente a la cámara, el mensaje es del tipo \textit{sensor\_msgs.msg.Image} que, usando el comando ``\lstinline|ros2 interface show sensor_msgs/msg/Image|", podemos ver cuál es su estructura:
+Para el bloque correspondiente a la cámara, el mensaje es del tipo \textit{sensor\_msgs.msg.Image} que, usando el comando``\lstinline|ros2 interface show sensor_msgs/msg/Image|",
+podemos ver cuál es su estructura:
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=10cm]{figs/c4/image_struct.png}
@@ -168,7 +192,10 @@ Para el bloque correspondiente a la cámara, el mensaje es del tipo \textit{sens
   \caption[Estructura mensaje Image]{Estructura de tipo de mensaje \textit{sensor\_msgs/msg/Image}.}
   \label{fig:image_struct}
 \end{figure}
-Podemos ver en la figura \ref{fig:image_struct} que la imagen que obtendremos estará en el campo \textit{data} del mensaje, pero ROS tiene una función llamada \textit{CvBridge}\footnote{\textbf{CvBridge}: \url{http://wiki.ros.org/cv_bridge}}, que nos permite transformar un mensaje del tipo \textit{sensor\_msgs/msg/Image} en una imagen de numpy\footnote{\textbf{Numpy}: \url{https://numpy.org/}}. Como los hilos de VisualCircuit comparten las imágenes como un array de numpy, debemos convertir la imagen de numpy a un array de numpy, usando la función \textit{numpy.asarray}.
+Podemos ver en la figura \ref{fig:image_struct} que la imagen que obtendremos estará en el campo \textit{data} del mensaje, pero ROS tiene una
+función llamada \textit{CvBridge}\footnote{\textbf{CvBridge}: \url{http://wiki.ros.org/cv_bridge}}, que nos permite transformar un mensaje del
+tipo \textit{sensor\_msgs/msg/Image} en una imagen de numpy\footnote{\textbf{Numpy}: \url{https://numpy.org/}}. Como los hilos de VisualCircuit
+comparten las imágenes como un array de numpy, debemos convertir la imagen de numpy a un array de numpy, usando la función \textit{numpy.asarray}.
 \begin{code}[H]
   \begin{lstlisting}[language=python]
     class CamSubscriber(Node):
@@ -205,7 +232,9 @@ Para el láser, podemos hacer lo mismo que con la cámara y revisar la estructur
   \caption[Estructura mensaje LaserScan]{Estructura de tipo de mensaje \textit{sensor\_msgs/msg/LaserScan}.}
   \label{fig:laserscan_struct}
 \end{figure}
-Podemos ver en la figura \ref{fig:laserscan_struct} que la lectura del láser estará en el campo \textit{ranges} del mensaje, que es un \textit{array} de \textit{floats} por lo que, para guardarlo en un array local usaremos la función de python ``\textit{.extend()}", que nos permite añadir una entrada más a un array. Esto lo haremos en el callback, ya que es donde actualizamos el valor de la variable global.
+Podemos ver en la figura \ref{fig:laserscan_struct} que la lectura del láser estará en el campo \textit{ranges} del mensaje, que es un \textit{array}
+de \textit{floats} por lo que, para guardarlo en un array local usaremos la función de python ``\textit{.extend()}", que nos permite añadir una entrada
+más a un array. Esto lo haremos en el callback, ya que es donde actualizamos el valor de la variable global.
 \begin{code}[H]
   \begin{lstlisting}[language=python]
     class LaserSubscriber(Node):
@@ -239,10 +268,13 @@ En cuanto a la función main, sólo habría que cambiar la función que usamos p
 
 % ******** MOTOR DRIVER
 Ya tenemos los bloques de los sensores, pero aún nos queda el que corresponde a los motores.
-En este caso, la configuración del bloque será distinta, ya que no necesitamos salida y sí necesitamos una entrada para que nos digan qué velocidades mandar al robot. Por esto, tendremos un bloque de código, un parámetro para el \textit{topic} de ROS2 y dos entradas, una para \textit{enable} (máquinas de estados) y otra para las velocidades que debemos enviar.\\
+En este caso, la configuración del bloque será distinta, ya que no necesitamos salida y sí necesitamos una entrada para que nos
+digan qué velocidades mandar al robot. Por esto, tendremos un bloque de código, un parámetro para el \textit{topic} de ROS2 y dos
+entradas, una para \textit{enable} (máquinas de estados) y otra para las velocidades que debemos enviar.\\
 
 \newpage
-El tipo de mensaje que suelen admitir los robots es ``geometry\_msgs/msg/Twist", y si miramos su estructura usando ``\lstinline|ros2 interface show geometry_msgs/msg/Twist|", nos encontramos lo siguiente:
+El tipo de mensaje que suelen admitir los robots es ``geometry\_msgs/msg/Twist", y si miramos su estructura usando ``\lstinline|ros2 interface show geometry_msgs/msg/Twist|",
+nos encontramos lo siguiente:
 \begin{figure} [H]
   \begin{center}
       \includegraphics[width=10cm]{figs/c4/twist_struct.png}
@@ -251,9 +283,15 @@ El tipo de mensaje que suelen admitir los robots es ``geometry\_msgs/msg/Twist",
   \label{fig:twist_struct}
 \end{figure}
 
-Como podemos ver en la figura \ref{fig:twist_struct}, este tipo de mensajes lleva dos paquetes de 3 floats, el primero para las velocidades lineales y el segundo para las angulares. Para crear un bloque más general que pueda adaptarse a todo tipo de robots, el bloque recibirá un array de 6 floats permitiendo introducir velocidades lineales y angulares en las 3 dimensiones que nos permite el mensaje, ya que aunque la mayoría de robots terrestres sólo usen una velocidad lineal y una angular, así permitimos el uso de este bloque con otros robots como drones o robots con ruedas omnidireccionales.\\
+Como podemos ver en la figura \ref{fig:twist_struct}, este tipo de mensajes lleva dos paquetes de 3 floats, el primero para las velocidades
+lineales y el segundo para las angulares. Para crear un bloque más general que pueda adaptarse a todo tipo de robots, el bloque recibirá un array
+de 6 floats permitiendo introducir velocidades lineales y angulares en las 3 dimensiones que nos permite el mensaje, ya que aunque la mayoría de
+robots terrestres sólo usen una velocidad lineal y una angular, así permitimos el uso de este bloque con otros robots como drones o robots con ruedas
+omnidireccionales.\\
 
-Para poder crear el nodo publicador iremos, al igual que hicimos con el suscriptor, a los manuales de ROS2-humble\footnote{\url{https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html\#write-the-publisher-node}} y a partir de ahí crear nuestro nodo publicador.
+Para poder crear el nodo publicador iremos, al igual que hicimos con el suscriptor, a los manuales de
+ROS2-humble\footnote{\url{https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html\#write-the-publisher-node}} y
+a partir de ahí crear nuestro nodo publicador.
 
 
 
@@ -327,7 +365,8 @@ Para poder crear el nodo publicador iremos, al igual que hicimos con el suscript
   \label{cod:motordriverros2_all}
 \end{code}
 
-Al ser un publicador, funciona con un temporizador para publicar el mensaje actualizado. Como podemos ver, se lee un array, se guarda en la variable global y cuando vuelva a ejecutarse el temporizador, se enviará la última actualización de las velocidades.
+Al ser un publicador, funciona con un temporizador para publicar el mensaje actualizado. Como podemos ver, se lee un array, se guarda en
+la variable global y cuando vuelva a ejecutarse el temporizador, se enviará la última actualización de las velocidades.
 
 
 
