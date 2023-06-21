@@ -1,52 +1,186 @@
 \chapter{Desarrollo de bloques driver}
 \label{cap:capitulo4}
-Como ya he explicado, VisualCircuit es una plataforma de programación online mediante el uso de bloques, pero para que esté actualizado,
-hay que ir añadiendo bloques nuevos que ofrezcan esas nuevas funciones y añadirlos a las listas de bloques estándar que ofrece la página.\\
-En este capítulo profundizaremos en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos
+Como ya se ha explicado, VisualCircuit es una plataforma de programación online mediante el uso de bloques, pero para que esté actualizado,
+se deben añadir bloques nuevos que ofrezcan esas nuevas funciones y añadirlos a las listas de bloques estándar que la página ofrece.\\
+En este capítulo se profundizará en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos
 bloques para poder añadir ROS2 a la misma.
 
+Los bloques drivers que se van a implementar son para la cámara, el láser y los motores usando un topic de ROS2, ya sea para suscribirse (sensores)
+o para publicar (actuadores).\\
+A continuación se explica el proceso seguido para desarrollar cada uno de los drivers.
 
-\section{Introducción a VisualCircuit}
-\label{sec:VC_intro}
+\section{Bloques sensores}
+\label{sec:blocks_sensores}
 
-En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores
-(cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS
-melodic\footnote{\textbf{ROS melodic}: \url{http://wiki.ros.org/melodic}}, pero al tratarse de una versión antigua, decidimos que ya era
-momento de actualizar a ROS2 humble\footnote{\textbf{ROS humble}: \url{https://docs.ros.org/en/humble/index.html}}, ya que era la versión estable
-más moderna hasta el momento.
+Usando un \textit{input} para activar/desactivar el bloque habilitaremos el uso de máquinas de estados con nuestro bloque.
+También queremos compartir la medida del sensor, por lo que añadimos un \textit{output}. Por último, usamos una constante donde definiremos
+el \textit{topic} del que obtendremos las lecturas del sensor. Esto lo hacemos para que el usuario no tenga que cambiar el código del bloque para cambiar
+el \textit{topic} del que obtiene la información.\\
 \begin{figure} [H]
   \begin{center}
-      \includegraphics[width=9cm]{figs/c4/VC_pre_codeblock.png}
+      \includegraphics[width=10cm]{figs/c4/VC_driver_blocks.png}
   \end{center}
-  \caption[Creando un bloque en VisualCircuit]{Creando un bloque en VisualCircuit.}
-  \label{fig:VC_creando_bloque}
+  \caption[Modelo bloque driver sensores]{Modelo para crear bloques driver de sensores.}
+  \label{fig:VC_driver_model}
 \end{figure}
 
-Para crear nuestro propio bloque, debemos añadir varios bloques prefabricados. Para introducir nuestro código principal usaremos el bloque \textit{code},
-como se puede ver en la figura \ref{fig:VC_creando_bloque}. Al crearlo, se nos permite definir el número de entradas, salidas y parámetros que tendrá nuestro código.
+En cuanto al código que usaremos, seguiremos las indicaciones de los manuales de
+ROS2-humble\footnote{\url{https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html\#write-the-subscriber-node}}
+para usar nodos suscriptores/publicadores con python. El código general para los bloques de sensores (suscriptores) será el siguiente:
 
-Una vez definidos, tenemos que usar bloques de \textit{Input}, \textit{Output} y \textit{Constant} y así, usando ``\textit{Save as}'',
-podemos exportarlo para usarlo como un bloque nuevo.
-\begin{figure} [H]
-  \begin{center}
-      \includegraphics[width=10cm]{figs/c4/VC_saveas.png}
-  \end{center}
-  \caption[Guardando un bloque en VisualCircuit]{Guardando un bloque en VisualCircuit.}
-  \label{fig:VC_saveas_bloque}
-\end{figure}
+\begin{code}[H]
+  \begin{lstlisting}[language=python]
+    import numpy as np
+    import rclpy
+    from rclpy.node import Node
+    from cv_bridge import CvBridge
+    from std_msgs/msg import String #SENSOR MSG TYPE
+    
+    bridge = CvBridge()
+    data = None
+    
+    # ros2 node class
+    class SENSORSubscriber(Node):
+        def __init__(self, topic):
+            super().__init__('sensor_subscriber')
+            self.subscription = self.create_subscription(
+              String, topic, self.callback, 10)
 
-Cuando tengamos varios bloques generados, podemos usar la opción \textit{FILE} \overrightarrow{ } \textit{Add as block} para añadir como nuevos bloques
-los que acabamos de crear y así formar un circuito completo con el comportamiento que queramos.
-\begin{figure} [H]
-  \begin{center}
-      \includegraphics[width=10cm]{figs/c4/VC_example.png}
-  \end{center}
-  \caption[Ejemplo de proyecto en VisualCircuit]{Ejemplo de proyecto en VisualCircuit.}
-  \label{fig:VC_example}
-\end{figure}
+            self.subscription  # prevent unused variable warning
+    
+        def callback(self, msg):
+            global data
+            # Modify msg as needed and save into global variable
+            data = msg
 
-Este es el funcionamiento general que debemos de seguir para usar VisualCircuit. Ahora, para crear bloques drivers nuevos para usar con ROS2
-debemos centrarnos más en el código.
+    def main(inputs, outputs, parameters, synchronise):
+        global data
+        auto_enable = False
+        try:
+            enable = inputs.read_number('Enable')
+        except Exception:
+            auto_enable = True
+        rclpy.init()
+        sensor_sub = SENSORSubscriber(parameters.read_string("ROSTopic"))
+
+        try:
+            while auto_enable or inputs.read_number('Enable'):
+                data =  None
+                rclpy.spin_once(sensor_sub)
+                if data is not None:
+                    outputs.share_string("Output", data)
+                synchronise()
+        except Exception as e:
+            print('Error:', e)
+            pass
+        finally:
+            print("Exiting")
+            synchronise()     
+            SENSORSubscriber.destroy_node()
+            rclpy.shutdown()
+  \end{lstlisting}
+  \caption[Modelo de código para bloques drivers]{Modelo de código para bloques drivers.}
+  \label{cod:bloques_drivers_sensors_total}
+\end{code}
+
+Si lo analizamos por partes, la clase \textbf{\textit{SENSORSubscriber}} (código \ref{cod:bloques_drivers_sensors_node_class}) contiene una función
+para inicializar la clase, donde se define el nombre del nodo, se crea el suscriptor y se inicia el suscriptor, y una función callback a la que se
+llamará de forma periódica, actualizando el valor de la variable global a la última medida del sensor.
+
+\begin{code}[H]
+  \begin{lstlisting}[language=python]
+    # ros2 node class
+    class SENSORSubscriber(Node):
+        def __init__(self, topic):
+            super().__init__('sensor_subscriber')
+            self.subscription = self.create_subscription(
+              String, topic, self.callback, 10)
+
+            self.subscription  # prevent unused variable warning
+    
+        def callback(self, msg):
+            global data
+            # Modify msg as needed and save into global variable
+            data = msg
+  \end{lstlisting}
+  \caption[Clase del nodo suscriptor para bloques drivers]{Clase del nodo suscriptor para los bloques drivers.}
+  \label{cod:bloques_drivers_sensors_node_class}
+\end{code}
+
+En la función main (código \ref{cod:bloques_drivers_sensors_main_general}) tenemos dos partes, la secuencia \textit{try-except} donde se declara
+si se está usando una maquina de estados (\textit{enable}) o si debe estar activo constantemente (\textit{autoenable} al haber dado error la lectura
+del cable de \textit{enable}).
+En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable global y se llama a \textit{``rclpy.spin\_once()"} para obtener la
+última medida del sensor y compartirla por el cable \textit{``output"}.
+
+\begin{code}[H]
+  \begin{lstlisting}[language=python]
+    def main(inputs, outputs, parameters, synchronise):
+        global data
+        auto_enable = False
+        try:
+            enable = inputs.read_number('Enable')
+        except Exception:
+            auto_enable = True
+        rclpy.init()
+        sensor_sub = SENSORSubscriber(parameters.read_string("ROSTopic"))
+
+        try:
+            while auto_enable or inputs.read_number('Enable'):
+                data =  None
+                rclpy.spin_once(sensor_sub)
+                if data is not None:
+                    outputs.share_string("Output", data)
+  \end{lstlisting}
+  \caption[Función main para bloques drivers de sensores]{Función main para los bloques drivers de sensores.}
+  \label{cod:bloques_drivers_sensors_main_general}
+\end{code}
+
+Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara y con el láser. Para ello,
+cambiaremos el tipo de mensaje que se envía, y haremos que el \textit{callback} obtenga del mensaje de ROS sólo la información que nos interesa,
+ya que éste viene con cabeceras y otros datos.\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Creación de bloques drivers}
 \label{sec:drivers_creacion}
