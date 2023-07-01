@@ -52,7 +52,10 @@ para usar nodos suscriptores/publicadores con python. El código general para lo
             global data
             # Modify msg as needed and save into global variable
             data = msg
-
+  \end{lstlisting}
+\end{code}
+\begin{code}[H]
+  \begin{lstlisting}[language=python]
     def main(inputs, outputs, parameters, synchronise):
         global data
         auto_enable = False
@@ -108,7 +111,7 @@ llamará de forma periódica, actualizando el valor de la variable global a la �
 \end{code}
 
 En la función main (código \ref{cod:bloques_drivers_sensors_main_general}) tenemos dos partes, la secuencia \textit{try-except} donde se declara
-si se está usando una maquina de estados (\textit{enable}) o si debe estar activo constantemente (\textit{autoenable} al haber dado error la lectura
+si se está usando una máquina de estados (\textit{enable}) o si debe estar activo constantemente (\textit{autoenable} al haber dado error la lectura
 del cable de \textit{enable}).
 En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable global y se llama a \textit{``rclpy.spin\_once()"} para obtener la
 última medida del sensor y compartirla por el cable \textit{``output"}.
@@ -139,7 +142,7 @@ En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable g
 Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara y con el láser. Para ello,
 cambiaremos el tipo de mensaje que se envía, y haremos que el \textit{callback} obtenga del mensaje de ROS sólo la información que nos interesa,
 ya que éste viene con cabeceras y otros datos.\\
-
+\newpage
 \subsection{Bloque cámara ROS2}
 \label{subsec:cameraROS2}
 
@@ -332,10 +335,6 @@ y a partir de ahí crear el nodo publicador necesario para este bloque.
                 print("bad length for input array")
                 return
             self.publisher_.publish(msg)
-  \end{lstlisting}
-\end{code}
-\begin{code}[H]
-  \begin{lstlisting}[language=python]
 
     def main(inputs, outputs, parameters, synchronise):
         global velocities
