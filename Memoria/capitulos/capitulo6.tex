@@ -237,8 +237,8 @@ calculado por el algoritmo.
                         final_w = -maximo
                     outputs.share_array("Vels", [1,0,0,0,0,final_w])
     \end{lstlisting}
-    \caption[Bloque fuerza atractiva]{Bloque que calcula la fuerza atractiva.}
-    \label{cod:attr_vel}
+    \caption[Bloque fuerzas a velocidades]{Bloque que transforma las fuerzas en velocidades.}
+    \label{cod:VFF_force_to_vel}
 \end{code}
 
 \subsection{Validación experimental}
@@ -302,35 +302,234 @@ desarrollado) y un bloque \textit{screen} para mostrar la imagen de este bloque.
 \section{VFF mediante máquina de estados}
 \label{sec:FSM}
 
-Una vez que el algoritmo está practicamente desarrollado, se va a implementar una máquina de estados. Esta máquina de estados tendrá 3 estados distintos: generar ubicación aleatoria, ir a la
-ubicación y volver al punto de salida (después de varias ubicaciones aleatorias).
+Una vez que el algoritmo está practicamente desarrollado, se va a implementar una máquina de estados. Esta máquina de estados tendrá 3 estados distintos: generar ubicación
+aleatoria, ir a la ubicación y volver al punto de salida (después de varias ubicaciones aleatorias).\\
+
+Como se puede ver en el siguiente diagrama, la ejecución se inicia
+generando una ubicación aleatoria que se envía al estado VFF. Cuando se ha ido a 4 ubicaciones aleatorias, se pasa al estado "\textit{Return Home}", que envía la ubicación
+inicial del robot como nuevo destino para el estado VFF. Una vez que llegue al inicio, se detiene al robot.
+
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=10cm]{figs/c6/FSM_diag.png}
+    \end{center}
+    \caption[Diagrama máquina de estados]{Diagrama de la máquinas de estados.}
+    \label{fig:FSM_diag}
+\end{figure}
 
 \subsection{Diseño del circuito y escenario}
 \label{subsec:dis_bloques_FSM}
 
-
+Para implementar el comportamiento de máquina de estados, se han implementado dos bloques nuevos para los comportamientos nuevos. También se ha colocado el bloque de la odometría
+como un sensor general, ya que se usa en varios estados, mientras que el estado VFF está separado visualmente para que sea más sencillo de reconocer.
 
 \begin{figure} [H]
     \begin{center}
-        \includegraphics[width=9cm]{figs/c6/FSM_circuit.png}
+        \includegraphics[width=13cm]{figs/c6/FSM_circuit.png}
     \end{center}
     \caption[Circuito VFF con FSM]{Circuito de VFF usando máquinas de estados.}
     \label{fig:FSM_circ}
 \end{figure}
 
+Como los objetivos ahora son aleatorios, no se puede usar el circuito que teníamos en el apartado anterior, por lo que se ha creado un mundo en el que se han
+repartido varios cilindros por todo el mapa para que el robot tenga que moverse hasta el objetivo esquivándolos.
 
-Como los objetivos ahora son aleatorios, 
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=13cm]{figs/c6/FSM_world.png}
+    \end{center}
+    \caption[Mundo VFF con FSM]{Mundo para probar el VFF con máquinas de estados.}
+    \label{fig:FSM_circ}
+\end{figure}
 
 \subsection{Bloques específicos}
 \label{subsec:spec_bloques_FSM}
 
+Para ampliar el funcionamiento del VFF para que también tenga en cuenta las fuerzas para calcular la velocidad lineal, se ha tenido que modificar los bloques que calculan las
+fuerzas atractiva y repulsiva (\ref{cod:parse_laser_data} y \ref{cod:attr_vel}), por lo que en vez de mandar una única fuerza, se mandan la fuerza como vector (componente X e Y).
+También se han añadido lecturas al \textit{input enable}, ya que es el que habilita activar y desactivar los bloques, únicamente ejecutando los bloques que estén activos en ese
+momento y manteniendo el resto en estado inactivo.
 
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+        # Cambio en bloque de fuerza repulsiva
+        outputs.share_array("RepForce", [obsX/50, obsY/50])
+
+        # Cambio en bloque de fuerza atractiva
+        outputs.share_array("AttrForce", [x_rel, y_rel])
+
+        # Bucle principal bloque laser
+        while 1:
+            enable = inputs.read_number('Enable')
+            if enable == 1:
+                measure = None
+                rclpy.spin_once(laser_subscriber)
+                if measure is not None:
+                    outputs.share_array("Out",measure)  
+    \end{lstlisting}
+\end{code}
+
+Uno de los bloques nuevos es el generador de ubicaciones aleatorias. Éste también es el que se encarga de decidir cuál será el siguiente estado. Para ello tiene un contador
+interno que le permite saber cuántas veces se han generado ubicaciones aleatorias y, cuando se llegue al valor de \textit{max\_times} se cambia al estado de volver al origen.
+Para generar la ubicación aleatoria, generamos un número que cumpla que num1 esté entre \textit{x-márgen} y \textit{x+márgen} y otro num2 que esté entre \textit{y-márgen} y \textit{y+márgen},
+para evitar ubicaciones que estén demasiado alejadas del robot. También dicho número debe estar entre 0 y 30, ya que estos son los límites del mundo (máximo que se
+representa dentro del bloque \textit{display}).
+
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+    from random import randint
+    import time
+
+    def main(inputs, outputs, parameters, synchronise):
+        first = True
+        changed = False
+        times = 0
+        max_times = 4
+        margen = 3
+        x = [0,30]
+        y = [0,30]
+        while 1:    
+                enable = inputs.read_number("Enable")
+                if(enable == 0):
+                    changed = False
+    \end{lstlisting}
+\end{code}
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+                if (enable == 1 or first) and not changed:
+                    odom = inputs.read_array("Odom")
+                    if odom[0] != None:
+                        changed = True
+                        first = False
+                        times += 1
+                        if(times < max_times):
+                            print("***ESTADO ACTIVADO -> GENERAR UBICACION ALEATORIA***")
+                            dest = [randint(x[0]+1, x[1]-1),
+                                        randint(y[0]+1,y[1]-1)]
+
+                            while dest[0] > int(odom[0]-margen) and dest[0] < int(odom[0]+margen):
+                                dest[0] = randint(x[0]+1, x[1]-1)
+                            while dest[1] > int(odom[1]-margen) and dest[1] < int(odom[1]+margen):
+                                dest[1] = randint(y[0]+1,y[1]-1)
+                                
+                            print("NUEVO DESTINO -> " + str(dest))
+                            time.sleep(2)
+                            print("***ESTADO ACTIVADO -> VFF***")
+                            outputs.share_array("Dest", dest)
+                            outputs.share_number("Next", 1)
+                            outputs.share_number("Last", 0)
+                        else:
+                            print("***ESTADO ACTIVADO -> VUELTA AL ORIGEN***")
+                            outputs.share_number("Next", 0)
+                            outputs.share_number("Last", 1)
+    \end{lstlisting}
+    \caption[Bloque generador aleatorio de destinos]{Bloque que genera destinos aleatorios y decide el siguiente estado.}
+    \label{cod:FSM_asker}
+\end{code}
+
+El siguiente bloque nuevo es el correspondiente al estado de volver al inicio. Cuando este bloque se activa, envía la ubicación del origen al estado VFF e imprime
+varias trazas para saber en qué punto del comportamiento se encuentra la ejecución.
+
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+        import time
+        def main(inputs, outputs, parameters, synchronise):
+            dest = [2,10]
+            first = True
+            going = False
+            while 1:
+                enable = inputs.read_number("Enable")
+                if enable == 1 and first:
+                        print("UBICACION DEL ORIGEN -> " + str(dest))
+                        time.sleep(2)
+                        outputs.share_array("Dest", dest)
+                        outputs.share_number("Next", 1)
+                        first = False
+                if enable == 0 and not first:
+                    going = True
+                if enable == 1 and going:
+                    print("HEMOS LLEGADO AL ORIGEN!!")
+                    outputs.share_number("Next", 0)
+    \end{lstlisting}
+    \caption[Bloque return home]{Bloque para volver al inicio.}
+    \label{cod:FSM_return_home}
+\end{code}
+
+El bloque que transforma las fuerzas a velocidades también cambia, ya que ahora hay que tener en cuenta la componente lineal de las fuerzas y, por lo tanto, calcular nuevas
+proporciones y evaluar valores máximos y mínimos. También se ha añadido que, si la velocidad lineal es negativa y la angular es cercana a 0 (valor absoluto menor que 0.3), se
+ponga al robot a girar estático. Esto es para evitar objetivos que se encuentren detrás del robot y que, por lo tanto, intente llegar a ellos marcha atrás.
+
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+        def main(inputs, outputs, parameters, synchronise):
+            max_v = 2
+            min_v = 0.5
+            max_w = 3
+            alpha_V = 1
+            beta_V = 1
+            alpha_W = 0.7
+            beta_W = 1.4
+            while 1:
+                rep = inputs.read_array("RepForce")
+                attr = inputs.read_array("AttrForce")
+                if rep is not None and attr is not None:
+                    attr_x, attr_y = test_max(attr[0],attr[1])
+                    rep_x, rep_y = test_max(rep[0],rep[1])
+                    final_v = alpha_V*attr_x + beta_V*rep_x
+                    final_w = alpha_W*attr_y + beta_W*rep_y
+    \end{lstlisting}
+\end{code}
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+                    if(final_v < 0 and final_w < 0.3 and final_w > 0.3):
+                        # Rotar en el sitio hasta que no sea sentido opuesto
+                        final_v = 0
+                        final_w = max_w/3
+                    elif(final_v > max_v):
+                        final_v = max_v
+                    elif(final_v < min_v):
+                        final_v = min_v
+
+                    if(final_w > max_w):
+                        final_w = max_w
+                    elif(final_w < -max_w):
+                        final_w = -max_w
+
+                    outputs.share_array("Vels", [final_v,0,0,0,0,final_w])
+    \end{lstlisting}
+    \caption[Bloque forces to vels]{Bloque que pasa de fuerzas a velocidades.}
+    \label{cod:FSM_forcestovels}
+\end{code}
+
+Por último, el bloque \textit{display} consiste en crear una imagen mediante un \textit{array} de \textit{numpy} en el que se muestra aproximadamente una representación del
+mundo que ve el robot. Aquí se muestran tanto la ubicación del robot y del destino, como las fuerzas atractiva (verde), repulsiva (roja) y total (naranja), sus valores y las lecturas
+del láser mediante pequeños puntos. También se ha representado cada metro cuadrado del simulador mediante una cuadrícula en la imagen.
+
+Aquí se usa la librería cv2 de opencv-python\footnote{\textbf{OpenCV-Python}: \url{https://pypi.org/project/opencv-python/}} para editar la imágen, para insertar
+líneas (\textit{cv2.line} para líneas y \textit{cv2.arrowedLine} para flechas) y para escribir texto (\textit{cv2.putText}), al igual que la librería \textit{math}
+(\textit{cos}, \textit{sin}, \textit{radians}, \textit{sqrt}, ...) para calcular la orientación de las flechas de las distintas fuerzas.
+
+Dada la extensión del código, no se va a incluir en esta memoria, por lo que
+aquí\footnote{\textbf{Código bloque display}: \url{https://github.com/RoboticsLabURJC/2022-tfg-david-tapiador/blob/main/FSM/ZIPS/FSM_final/modules/Code_1.py}}
+se puede acceder a él.
 
 \subsection{Validación experimental}
 \label{subsec:val_exp_FSM}
 
+En la siguiente secuencia de imágenes se puede comprobar el resultado de la ejecución del algoritmo usando la máquina de estados. Como se puede ver, el TurtleBot2 es capaz de
+evitar los obstáculos en tiempo real llegando a los distintos objetivos aleatorios que se han calculado durante esa ejecución.
 
-
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=7cm]{figs/c6/FSM_final1.png}
+        \includegraphics[width=7cm]{figs/c6/FSM_final2.png}
+        \includegraphics[width=7cm]{figs/c6/FSM_final3.png}
+        \includegraphics[width=7cm]{figs/c6/FSM_final4.png}
+    \end{center}
+    \caption[Secuencia VFF con FSM]{Secuencia de imágenes del algoritmo VFF usando FSM. Imagenes obtenidas de Youtube\footnotemark.}
+    \label{fig:sec_FSM_final}
+\end{figure}
+\footnotetext{\textbf{Vídeo}: \url{https://www.youtube.com/watch?v=EiBT8yqX29Q&ab_channel=Tapii}}
 
 
 
