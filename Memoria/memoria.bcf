@@ -2344,25 +2344,22 @@
     <bcf:datasource type="file" datatype="bibtex">bibliografia.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">vega12e</bcf:citekey>
-    <bcf:citekey order="2">vega19b</bcf:citekey>
-    <bcf:citekey order="3">vega19a</bcf:citekey>
-    <bcf:citekey order="4">vega18b</bcf:citekey>
-    <bcf:citekey order="5">vega18a</bcf:citekey>
-    <bcf:citekey order="6">vega08b</bcf:citekey>
-    <bcf:citekey order="7">comunicacion_ros2</bcf:citekey>
-    <bcf:citekey order="8">comunicacion_ros2</bcf:citekey>
-    <bcf:citekey order="9">kobuki_base</bcf:citekey>
-    <bcf:citekey order="10">kobuki_base</bcf:citekey>
+    <bcf:citekey order="1">comunicacion_ros2</bcf:citekey>
+    <bcf:citekey order="2">comunicacion_ros2</bcf:citekey>
+    <bcf:citekey order="3">kobuki_base</bcf:citekey>
+    <bcf:citekey order="4">kobuki_base</bcf:citekey>
+    <bcf:citekey order="5">turtlebot_2_structure</bcf:citekey>
+    <bcf:citekey order="6">turtlebot_2_structure</bcf:citekey>
+    <bcf:citekey order="7">asus_xtion</bcf:citekey>
+    <bcf:citekey order="8">asus_xtion</bcf:citekey>
+    <bcf:citekey order="9">rplidar</bcf:citekey>
+    <bcf:citekey order="10">rplidar</bcf:citekey>
     <bcf:citekey order="0" nocite="1">*</bcf:citekey>
-    <bcf:citekey order="11">vega12e</bcf:citekey>
-    <bcf:citekey order="12">vega19b</bcf:citekey>
-    <bcf:citekey order="13">vega19a</bcf:citekey>
-    <bcf:citekey order="14">vega18b</bcf:citekey>
-    <bcf:citekey order="15">vega18a</bcf:citekey>
-    <bcf:citekey order="16">vega08b</bcf:citekey>
-    <bcf:citekey order="17">comunicacion_ros2</bcf:citekey>
-    <bcf:citekey order="18">kobuki_base</bcf:citekey>
+    <bcf:citekey order="11">comunicacion_ros2</bcf:citekey>
+    <bcf:citekey order="12">kobuki_base</bcf:citekey>
+    <bcf:citekey order="13">turtlebot_2_structure</bcf:citekey>
+    <bcf:citekey order="14">asus_xtion</bcf:citekey>
+    <bcf:citekey order="15">rplidar</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
@@ -2394,13 +2391,4 @@
     </bcf:sort>
   </bcf:sortingtemplate>
   <!-- DATALISTS -->
-  <bcf:datalist section="0"
-                name="nty/global//global/global"
-                type="entry"
-                sortingtemplatename="nty"
-                sortingnamekeytemplatename="global"
-                labelprefix=""
-                uniquenametemplatename="global"
-                labelalphanametemplatename="global">
-  </bcf:datalist>
 </bcf:controlfile>
