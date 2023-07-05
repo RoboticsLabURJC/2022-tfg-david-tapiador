@@ -1,63 +1,60 @@
 \chapter{Objetivos y metodología de Trabajo}
 \label{cap:capitulo2}
 
-\begin{flushright}
-\begin{minipage}[]{10cm}
-\emph{Quizás algún fragmento de libro inspirador...}\\
-\end{minipage}\\
+\section{Objetivos}
+\label{sec:objetivos}
 
-Autor, \textit{Título}\\
-\end{flushright}
-
-\vspace{1cm}
-
-Escribe aquí un párrafo explicando brevemente lo que vas a contar en este capítulo. En este capítulo lo ideal es explicar cuáles han sido los objetivos que te has fijado conseguir con tu trabajo, qué requisitos ha de respetar el resultado final, y cómo lo has llevado a cabo; esto es, cuál ha sido tu plan de trabajo.\\
-
-\section{Descripción del problema}
-\label{sec:descripcion}
-
-Cuenta aquí el objetivo u objetivos generales y, a continuación, concrétalos mediante objetivos específicos.
-
-\section{Requisitos}
-\label{sec:requisitos}
-
-Describe los requisitos que ha de cumplir tu trabajo.
-
-\section{Metodología}
-\label{sec:metodologia}
-
-Qué paradigma de desarrollo software has seguido para alcanzar tus objetivos.
-
-\section{Plan de trabajo}
-\label{sec:plantrabajo}
-
-
-
-
-
-
-***COSAS GUARDADAS PARA HACER***
-
--En la revision del cap 4 pone cómo hacer este cap
-
--Cacho guardado para hacer el capitulo2.
-
-********
 En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores
 (cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS
-Noetic\footnote{\textbf{ROS Noetic}: \url{http://wiki.ros.org/noetic}}, pero al tratarse de una versión antigua, decidimos que ya era
-momento de actualizar a ROS2 Humble\footnote{\textbf{ROS Humble}: \url{https://docs.ros.org/en/humble/index.html}}, ya que era la versión estable
-más moderna hasta el momento.
-******
+\textit{Noetic}\footnote{\textbf{ROS Noetic}: \url{http://wiki.ros.org/noetic}}, pero al tratarse de una versión obsoleta del middleware,
+decidimos que ya era momento de actualizar a ROS2 \textit{Humble}\footnote{\textbf{ROS Humble}: \url{https://docs.ros.org/en/humble/index.html}},
+ya que es la versión estable más moderna en el momento de realización de este Trabajo Fin de Grado.\\
 
+Los objetivos de este Trabajo Fin de Grado son los siguientes:
 
+\begin{itemize}
+	\item   Desarrollar bloques para sensores y actuadores usando ROS2 \textit{Humble} y probar su correcto funcionamiento mediante
+                        circuitos simples de VisualCircuit.
+                    Profundizaremos más en el capítulo \ref{cap:capitulo4}.
+	\item   Diseñar y construir aplicaciones complejas que usen estos bloques para comprobar su funcionalidad en situaciones reales:
+    \begin{itemize}
+        \item   Aplicación sigue-persona: usar reconocimiento visual para seguir a una persona tanto en entorno simulado como real,
+                    usando el robot TurtleBot2 (\ref{sec:turtlebot2}).
+                    Veremos más en el capítulo \ref{cap:capitulo5}.
+        \item   Aplicación \textit{Virtual Force Field}: usar el láser y la odometría para navegar por el entorno evitando obstáculos.
+                    Examinaremos con mayor detalle en el capítulo \ref{cap:capitulo6}.
+    \end{itemize}
+\end{itemize}
 
+\newpage
 
+\section{Metodología}
+\label{sec:metod}
 
+Este Trabajo Fin de Grado comenzó en abril de 2022 y finalizó en junio de 2023. Durante estos meses se ha seguido el siguiente modelo de trabajo: 
 
+\begin{itemize}
+	\item   Reuniones cada dos semanas con el tutor del TFG para analizar los avances, recibir retroalimentación y buscar soluciones en caso
+                de bloqueo.
+	\item   Uso de un blog\footnote{\textbf{Blog}: \url{https://roboticslaburjc.github.io/2022-tfg-david-tapiador/}} donde se iba actualizando el
+                progreso antes de las reuniones, donde se puede comprobar el desarrollo cronológico del trabajo.
+	\item   Todo el material usado y desarrollado durante este Trabajo Fin de Grado se ha ido actualizando en un repositorio de
+                GitHub\footnote{\textbf{GitHub del TFG}: \url{https://github.com/RoboticsLabURJC/2022-tfg-david-tapiador}}.
+\end{itemize}
 
+\section{Plan de Trabajo}
+\label{sec:work_plan}
 
+Como se ha dicho en el anterior punto, el desarrollo de este TFG ha durado algo más de un año. Este periodo se ha dividido en varias etapas: 
 
-
-
+\begin{enumerate}
+	\item   \textbf{Pruebas con VisualCircuit}: Realizar circuitos para entender el funcionamiento de la plataforma, desarrollando bloques
+                propios que modifiquen imágenes o compartan información.
+	\item   \textbf{Inicio del TFG}: Configuración del entorno de pruebas (instalación de ROS2 \textit{Humble}, diseño de mundos
+                en \textit{Gazebo}...)..
+    \item   \textbf{Desarrollo de bloques con ROS2}: Actualización y creación de bloques para sensores y actuadores usando ROS2 \textit{Humble}.
+    \item   \textbf{Prueba de los bloques en situaciones reales}: Desarrollo de aplicaciones avanzadas para probar el correcto
+                funcionamiento de los bloques implementados. 
+    \item   \textbf{Memoria del Trabajo Fin de Grado}: Redacción de esta memoria. 
+\end{enumerate}
 
