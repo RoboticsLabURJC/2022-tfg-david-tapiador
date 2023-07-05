@@ -7,9 +7,29 @@ Trabajo Fin de Grado se hará un resumen de las metas logradas.
 \section{Conclusiones}
 
 El objetivo principal de este proyecto era actualizar la plataforma VisualCircuit para que incluyera bloques orientados directamente a
-la robótica usando ROS2 \textit{Humble}.
+la robótica usando ROS2 \textit{Humble}. Este objetivo ha sido alcanzado con éxito, añadiendo a las bibliotecas de VisualCircuit los bloques
+correspondientes a los sensores (láser y cámara) y actuadores (motores) tanto reales como simulados.
+También se ha desarrollado un bloque \textit{encoders} para obtener la posición del robot en el simulador.\\
+
+Otro de los objetivos era comprobar el correcto funcionamiento de estos bloques mediante aplicaciones simples que lo demostraran. Como
+hemos comprobado en el capítulo \ref{cap:capitulo4}. También se buscaba desarrollar aplicaciones complejas que demostraran la eficacia de
+los bloques, y mediante la aplicación sigue-personas (\ref{cap:capitulo5}) y \textit{Virtual Force Field} (\ref{cap:capitulo6}) se puede
+comprobar que este objetivo también se ha cumplido.\\
+
+Este TFG ha logrado enriquecer la plataforma VisualCircuit permitiendo desarrollar aplicaciones más avanzadas y acercarla cada vez más a
+ser una de las plataformas online de referencia para programar robots.
+
+\newpage
+
+\section{Líneas futuras}
+
+Algunas formas en las que se podría continuar con el desarrollo planteado en este Trabajo Fin de Grado podrían ser:
 
 \begin{itemize}
-	\item 
-	\item 
+	\item   Desarrollar bloques para nuevos sensores, como podrían ser los \textit{bumpers}, o actuadores como \textit{leds} y sonidos.
+	\item   Avanzar hacia el camino de los drones, incluyendo bloques que activen, desactiven y configuren los modos de vuelo y que
+                permitan despegar y aterrizar, ya que la programación de drones suele ser más tediosa y ver el comportamiento
+                de forma tan visual como permite VisualCircuit ayudaría en el proceso.
+	\item   Ampliar VisualCircuit de tal forma que se permita compartir bloques y comportamientos completos entre distintos usuarios
+                mediante un foro comunitario, añadiendo más bloques prefabricados a las bibliotecas de bloques.
 \end{itemize}

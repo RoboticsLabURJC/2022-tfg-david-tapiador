@@ -5,8 +5,8 @@ se deben añadir bloques nuevos que ofrezcan esas nuevas funciones y añadirlos 
 En este capítulo se profundizará en el funcionamiento de la plataforma VisualCircuit así como en el proceso seguido para desarrollar nuevos
 bloques para poder añadir ROS2 a la misma.
 
-Los bloques drivers que se van a implementar son para la cámara, el láser y los motores usando un topic de ROS2, ya sea para suscribirse (sensores)
-o para publicar (actuadores).\\
+Los bloques drivers que se van a implementar son para la cámara, el láser, la odometría y los motores usando un topic de ROS2, ya sea
+para suscribirse (sensores) o para publicar (actuadores).\\
 A continuación se explica el proceso seguido para desarrollar cada uno de los drivers.
 
 \section{Bloques sensores}
@@ -139,7 +139,7 @@ En la segunda parte (bucle \textit{while}) se reinicia el valor de la variable g
   \label{cod:bloques_drivers_sensors_main_general}
 \end{code}
 
-Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara y con el láser. Para ello,
+Una vez que tenemos el modelo general para estos bloques, hay que modificarlos para que funcionen con la cámara, el láser y la odometría. Para ello,
 cambiaremos el tipo de mensaje que se envía, y haremos que el \textit{callback} obtenga del mensaje de ROS sólo la información que nos interesa,
 ya que éste viene con cabeceras y otros datos.\\
 \newpage
@@ -275,6 +275,40 @@ en una terminal los valores recibidos, tanto con el robot real como con el simul
     \label{fig:vid_laserR}
 \end{figure}
 \footnotetext{\textbf{Vídeo bloque láser real}: \url{https://www.youtube.com/watch?v=-MweaxUVsCg&ab_channel=Tapii}}
+
+\subsection{Bloque odometría ROS2}
+\label{subsec:odomROS2}
+% ****** ODOM
+
+El bloque de la odometría debe devolver la posición del robot en el mundo, esto implica coordenadas \textit{X} e \textit{Y}, al igual que la
+posición angular del eje \textit{Z}. En este caso, el tipo de mensaje del \textit{topic /odom} es \textit{nav\_msgs/msg/Odometry},
+cuyos parámetros podemos comprobar mediante el comando ``\lstinline|ros2 interface show nav_msgs/msg/Odometry|" con el siguiente resultado:
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=12cm]{figs/c6/odom_msg.png}
+    \end{center}
+    \caption[Estructura mensaje Odometría]{Estructura del tipo de mensaje \textit{nav\_msgs/msg/Odometry}.}
+    \label{fig:odom_struct}
+\end{figure}
+
+En la función \textit{callback} se debe almacenar estos tres valores y enviarlos por el cable de salida usando un array. Los primeros
+dos valores se pueden sacar directamente del campo \textit{pose.pose.position} del mensaje, pero la rotación viene dada mediante
+cuaterniones, por lo que hay que transformarlo a ángulos de euler y obtener el valor que se busca. Esto se realiza mediante la
+función \textit{Rotation} del paquete
+\textit{scipy.spatial.transform}\footnote{\textbf{Librería Spicy}: \url{docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html}}
+de \textit{python3}.
+\begin{code}[H]
+    \begin{lstlisting}[language=python]
+        def callback(self, msg):
+            global odom
+            odom[0] = msg.pose.pose.position.x
+            odom[1] = msg.pose.pose.position.y
+            rot = Rotation.from_quat([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
+            odom[2] = rot.as_euler('xyz', degrees=True)[2]
+    \end{lstlisting}
+    \caption[Funciones para obtener la fuerza repulsiva]{Funciones para obtener la fuerza repulsiva.}
+    \label{cod:rep_vel}
+\end{code}
 
 \section{Bloque MotorDriverROS2}
 \label{sec:motordriverros2}
