@@ -1,34 +1,39 @@
 \chapter{Aplicación \textit{Virtual Force Field}}
 \label{cap:capitulo6}
-Como ya se ha explicado, otra de las aplicaciones que se ha desarrollado consiste en navegación local usando el algoritmo VFF
+Como ya se ha explicado, otra de las aplicaciones que se ha desarrollado consiste en navegación local del robot usando el algoritmo VFF
 mediante el uso de máquinas de estados.
 
 Se han hecho dos implementaciones de esta aplicación: una canónica combinando fuerzas para recorrer un circuito y otra
-como autómata de estado finito, aprovechando los mecanismos que tiene VisualCircuit para activar y desactivar bloques, recorriendo los .
+como autómata de estado finito, aprovechando los mecanismos que tiene VisualCircuit para activar y desactivar bloques, navegando a destinos aleatorios
+generados en la propia ejecución.
 
 \section{Campo de fuerzas virtuales (VFF)}
 \label{sec:VFF}
 
-El algoritmo de movimiento mediante campo de fuerzas virtuales o \textit{virtual field force} consiste en programar el movimiento del robot a
-través de un lugar avanzando gracias a objetivos temporales (como si fueran balizas) y esquivando los obstáculos entre la posición del robot
-y el objetivo mediante la fuerza repulsiva generada por las medidas de los distintos sensores al percibir dichos obstáculos.\\
+El algoritmo de navegación local mediante campo de fuerzas virtuales o \textit{virtual field force} consiste en programar el movimiento del robot a
+través de un lugar avanzando gracias a destinos temporales (como si fueran balizas) y esquivando los obstáculos entre la posición del robot
+y el destino actual mediante la fuerza repulsiva generada por las medidas de los distintos sensores al percibir dichos obstáculos.\\
 
 Este algoritmo se basa en dos partes principales: la fuerza repulsiva (inversamente proporcional a la distancia con los obstáculos) y la
-fuerza atractiva (dirección al objetivo). Para obtener ambas fuerzas serán necesarios dos sensores: láser (fuerza repulsiva) y odometría (fuerza atractiva).\\
+fuerza atractiva (dirección al destino). Para obtener ambas fuerzas serán necesarios dos sensores: láser (fuerza repulsiva) y odometría (fuerza atractiva).\\
 
 \subsection{Diseño del circuito y escenario}
 \label{subsec:dis_bloques_VFF}
 
-El circuito para este comportamiento consiste en de dos ramas principales, una para cada fuerza, y la unión de estas ramas mandando una velocidad
-final tanto lineal como angular.\\
+El circuito para este comportamiento consiste en dos ramas principales, una para cada fuerza, y la unión de estas ramas mandando una velocidad
+final tanto lineal como angular a los motores del robot (figura \ref{fig:VFF_circ}).\\
 
-En la rama superior está el sensor láser junto con un bloque para obtener una única fuerza como resultado de todas las medidas del láser. En la inferior
+\newpage
+
+En la rama superior está el sensor láser junto con un bloque para obtener una única fuerza repulsiva como resultado de todas las medidas del láser. En la inferior
 se encuentra el sensor \textit{odom}, que da la posición del robot en las coordenadas del mundo simulado.
-Esta medida se pasa a dos bloques: el generador de objetivos (bloque que envía el objetivo actual y, en caso de haber llegado, envía el siguiente dentro
-de una lista) y el bloque que se encarga de calcular la fuerza atractiva.
+Esta medida se pasa a dos bloques: el generador de objetivos (bloque que envía el destino actual y, en caso de haber llegado, envía el siguiente dentro
+de una lista) y el bloque que se encarga de calcular la fuerza atractiva.\\
 
 Ambas ramas se juntan en un bloque que las suma ponderadamente teniendo en cuenta sus valores de influencia (la repulsiva debe influir más que la
-atractiva para evitar colisiones por roce) y se envían como velocidades al bloque MotorDriverROS2 (\ref{sec:motordriverros2}).
+atractiva para evitar colisiones por roce) y se envían como velocidades (\textit{v}, \textit{w}) de traslación y de rotación al bloque
+MotorDriverROS2 (sección \ref{sec:motordriverros2}).\\
+
 \begin{figure} [H]
     \begin{center}
         \includegraphics[width=12cm]{figs/c6/VFF_circ.png}
@@ -36,9 +41,10 @@ atractiva para evitar colisiones por roce) y se envían como velocidades al bloq
     \caption[Circuito VFF]{Circuito del algoritmo VFF.}
     \label{fig:VFF_circ}
 \end{figure}
-El escenario de pruebas consiste en un circuito creado a base de bloques cúbicos como muros con algunas barras rojas (cubos rectangulares) horizontales que marcan
-aproximadamente dónde se encuentran los objetivos. Hay una zona en la que no hay practicamente borde para comprobar que la fuerza atractiva fuese lo suficiente fuerte
-como para no desviarse al encontrar un hueco en uno de los lados.
+El escenario de pruebas consiste en un circuito creado en el simulador Gazebo a base de bloques cúbicos como muros con algunas barras
+rojas (cubos rectangulares) horizontales que marcan aproximadamente dónde se encuentran los objetivos (figura \ref{fig:VFF_world}). Hay una
+zona en la que no hay prácticamente borde para comprobar que la fuerza atractiva fuese lo suficiente fuerte como para no desviarse al encontrar
+un hueco en uno de los lados.
 
 \begin{figure} [H]
     \begin{center}
@@ -48,7 +54,7 @@ como para no desviarse al encontrar un hueco en uno de los lados.
     \label{fig:VFF_world}
 \end{figure}
 
-\subsection{Bloques específicos}
+\subsection{Bloques específicos de la lógica de esta aplicación}
 \label{subsec:spec_bloques_VFF}
 
 El primer bloque nuevo específico de esta aplicación es el que transforma las medidas del láser a un valor único.
@@ -58,7 +64,7 @@ en un array de tuplas junto al ángulo que dicha medida representa.\\
 Después se recorre el array de tuplas para obtener vectores que representen el valor del eje X e Y para cada medida del láser. Ésto se hace multiplicando la medida
 original (hipotenusa) por el seno o coseno del ángulo. Después se guarda en un nuevo array de tuplas para cada par de valore (x,y).\\
 
-Ahora para calcular la fuerza final se recorre el array de medidas vectoriales sumando los valores inversos, es decir, el valor absoluto de la división de un valor
+Ahora para calcular la fuerza repulsiva final se recorre el array de medidas vectoriales sumando los valores inversos, es decir, el valor absoluto de la división de un valor
 entre la medida, permitiendo que cuanto más cercano (menor sea la medida) mayor influencia tenga en el resultado de fuerza repulsiva final. En el caso del eje X, sólo
 hay que comprobar que la medida sea distinta de 0, mientras que en el caso del eje Y hay que evitar medidas superiores a 10, ya que es el límite del sensor y
 sumaría \textit{inf} (infinito).
@@ -85,10 +91,6 @@ sumaría \textit{inf} (infinito).
                 y = d * math.sin (a) * -1
             v = (x, y)
             laser_vectorized += [v]
-    \end{lstlisting}
-\end{code}
-\begin{code}[H]
-    \begin{lstlisting}[language=python]
         obsx = 0
         obsy = 0    
         amortiguacion = 1   #Mayor amortiguacion, mas valen los valores lejanos
@@ -102,25 +104,24 @@ sumaría \textit{inf} (infinito).
             else:
                 if(laser_vectorized[180+i][1] != 0 and laser_vectorized[180+i][1] < 10):
                     obsy += pico*abs(math.atan(amortiguacion/(laser_vectorized[180+i][1])))
-        return obsx, obsy
+        return obsx, obsY
 
     def main(inputs, outputs, parameters, synchronise):
         reduction = 1/50
-        try:
-            while 1:    
-                measures = inputs.read_array("Laser")
-                if measures is not None:
-                    obsX, obsY = getObs_xy(measures)
-                    outputs.share_array("RepForce", [obsX/50, obsY/50])
+        while 1:    
+            measures = inputs.read_array("Laser")
+            if measures is not None:
+                obsX, obsY = getObs_xy(measures)
+                outputs.share_array("RepForce", [obsX/50, obsY/50])
     \end{lstlisting}
     \caption[Funciones para obtener la fuerza repulsiva]{Funciones para obtener la fuerza repulsiva.}
     \label{cod:parse_laser_data}
 \end{code}
 
-En cuanto a la fuerza atractiva, se debe usar la posición actual del robot y la posición que se ha marcado como destino. Para obtener la
+En cuanto a la fuerza atractiva, se debe usar la posición absoluta actual del robot y la posición que se ha marcado como destino actual. Para obtener la
 posición del robot se ha de utilizar el bloque de odometría planteado en el apartado \ref{subsec:odomROS2}, mientras que para obtener
-los destinos se ha creado el bloque generador de destinos, que usa la ubicación del robot para comprobar si ha llegado a la
-actual (teniendo en cuenta un margen) y mandar la siguiente dentro de la lista de destinos. También se cuenta con un contador
+los destinos se ha creado el bloque generador de destinos, que usa la ubicación del robot para comprobar si el robot ha llegado al destino
+actual (teniendo en cuenta un margen) y mandar el siguiente dentro de la lista de destinos. También se cuenta con un contador
 de vueltas, aprovechando que el circuito de pruebas es circular.
 
 \begin{code}[H]
@@ -160,7 +161,7 @@ de vueltas, aprovechando que el circuito de pruebas es circular.
     \label{cod:dest_gen}
 \end{code}
 
-Estos dos \textit{arrays} (posición y destino) los recibe el siguiente bloque, que es el que calcula la fuerza atractiva. Este bloque comprueba que
+Estos dos \textit{arrays} (posición y destino) los recibe el siguiente bloque, que es el que calcula la fuerza atractiva instantánea. Este bloque comprueba que
 los datos que recibe no estén vacíos (al iniciar la ejecución puede leer \textit{null} de los cables), calculando la posición relativa del objetivo
 respecto al robot tanto para los ejes \textit{X} e \textit{Y} como para la rotación relativa. En caso de que la rotación relativa supere un valor máximo,
 se establece dicho máximo como valor de ángulo relativo, enviando éste como único valor, ya que en esta versión sólo se tiene en cuenta la velocidad angular,
@@ -191,12 +192,10 @@ manteniendo la lineal constante a 1 (en el VFF con máquina de estados sí se ti
 Por último, ambas fuerzas se combinan en un mismo bloque, que es el encargado de sumar ambas fuerzas y transformarlas en velocidad angular. Para ello aplica
 un valor a modo de controlador constante para que la fuerza repulsiva sea más significativa que la atractiva y permitir que el robot esquive objetos que
 puedan quedar muy cercanos. Finalmente se envía el \textit{array} de velocidades manteniendo la velocidad lineal a 1 y siendo la velocidad angular el valor
-calculado por el algoritmo.
+calculado por los bloques descritos.
 
 \begin{code}[H]
     \begin{lstlisting}[language=python]
-        import math
-
         def main(inputs, outputs, parameters, synchronise):
             maximo = 3
             while True:            
@@ -217,9 +216,9 @@ calculado por el algoritmo.
 \subsection{Validación experimental}
 \label{subsec:val_exp_VFF}
 Para comprobar que el algoritmo funcionase, se han realizado varias pruebas: sólo fuerza repulsiva con obstáculos y sin ellos, y el algoritmo completo con un
-bloque de depuración (\ref{subsec:spec_bloques_FSM}).
+bloque de depuración (figura \ref{subsec:spec_bloques_FSM}).
 
-Para las primeras pruebas el circuito contaría únicamente con 3 bloques: el bloque del sensor láser, el que calcula la fuerza repulsiva y el bloque MotorDriverROS2:
+Para las primeras pruebas el circuito contó únicamente con 3 bloques: el bloque del sensor láser, el que calcula la fuerza repulsiva y el bloque MotorDriverROS2:
 
 \begin{figure} [H]
     \begin{center}
@@ -229,8 +228,8 @@ Para las primeras pruebas el circuito contaría únicamente con 3 bloques: el bl
     \label{fig:VFF_r_circ}
 \end{figure}
 
-Como podemos comprobar en las siguientes secuencias y en sus vídeos correspondientes, la parte de la fuerza repulsiva cumple con el objetivo, ya que mantiene
-al robot alejado de las paredes del circuito a la vez que evita los obstáculos (en el caso en el que los hay).
+Como podemos comprobar en las siguientes secuencias y en sus vídeos correspondientes, la parte de la fuerza repulsiva cumple con su misión, ya que mantiene
+al robot alejado de las paredes del circuito a la vez que evita los obstáculos (en el caso en el que los haya).
 
 \begin{figure} [H]
     \begin{center}
@@ -251,8 +250,8 @@ al robot alejado de las paredes del circuito a la vez que evita los obstáculos 
 \end{figure}
 \footnotetext{\textbf{Vídeo VFF fuerza repulsiva con obstáculos}: \url{https://www.youtube.com/watch?v=HeTFum_gTGw&ab_channel=Tapii}}
 
-En la siguiente prueba, el circuito usado incluye el bloque display (se describirá su funcionamiento en el siguiente punto, ya que aquí no estaba completamente
-desarrollado) y un bloque \textit{screen} para mostrar la imagen de este bloque.
+En la siguiente prueba, el circuito usado incluye el bloque Display (se describirá su funcionamiento en el siguiente punto, ya que aquí no estaba aún
+completamente desarrollado) y un bloque \textit{screen} para mostrar la imagen de este bloque.
 
 \begin{figure} [H]
     \begin{center}
@@ -275,10 +274,11 @@ desarrollado) y un bloque \textit{screen} para mostrar la imagen de este bloque.
 \section{VFF mediante máquina de estados}
 \label{sec:FSM}
 
-Una vez que el algoritmo está practicamente desarrollado, se va a implementar una máquina de estados. Esta máquina de estados tendrá 3 estados distintos: generar ubicación
-aleatoria, ir a la ubicación y volver al punto de salida (después de varias ubicaciones aleatorias).\\
+Una vez que el algoritmo está practicamente desarrollado, se implementó una máquina de estados para completar la aplicación.
+Esta máquina de estados tiene 3 estados distintos: generar ubicación aleatoria, ir a la ubicación y volver al punto de salida
+(después de varias ubicaciones aleatorias).\\
 
-Como se puede ver en el siguiente diagrama, la ejecución se inicia
+Como se puede ver en el siguiente diagrama (figura \ref{fig:FSM_diag}), la ejecución se inicia
 generando una ubicación aleatoria que se envía al estado VFF. Cuando se ha ido a 4 ubicaciones aleatorias, se pasa al estado "\textit{Return Home}", que envía la ubicación
 inicial del robot como nuevo destino para el estado VFF. Una vez que llegue al inicio, se detiene al robot.
 
@@ -293,7 +293,7 @@ inicial del robot como nuevo destino para el estado VFF. Una vez que llegue al i
 \subsection{Diseño del circuito y escenario}
 \label{subsec:dis_bloques_FSM}
 
-Para implementar el comportamiento de máquina de estados, se han implementado dos bloques nuevos para los comportamientos nuevos. También se ha colocado el bloque de la odometría
+Para implementar el comportamiento de la máquina de estados, se han implementado dos bloques nuevos. También se ha colocado el bloque de la odometría
 como un sensor general, ya que se usa en varios estados, mientras que el estado VFF está separado visualmente para que sea más sencillo de reconocer.
 
 \begin{figure} [H]
@@ -315,13 +315,13 @@ repartido varios cilindros por todo el mapa para que el robot tenga que moverse 
     \label{fig:FSM_world}
 \end{figure}
 
-\subsection{Bloques específicos}
+\subsection{Bloques específicos de la lógica de esta aplicación}
 \label{subsec:spec_bloques_FSM}
 
 Para ampliar el funcionamiento del VFF para que también tenga en cuenta las fuerzas para calcular la velocidad lineal, se ha tenido que modificar los bloques que calculan las
-fuerzas atractiva y repulsiva (\ref{cod:parse_laser_data} y \ref{cod:attr_vel}), por lo que en vez de mandar una única fuerza, se mandan la fuerza como vector (componente X e Y).
-También se han añadido lecturas al \textit{input enable}, ya que es el que habilita activar y desactivar los bloques, únicamente ejecutando los bloques que estén activos en ese
-momento y manteniendo el resto en estado inactivo.
+fuerzas atractiva y repulsiva (códigos \ref{cod:parse_laser_data} y \ref{cod:attr_vel}), por lo que en vez de mandar una única fuerza escalar, se mandan la fuerza como
+vector (componente X e Y). También se han añadido lecturas al \textit{input enable}, ya que es el que habilita activar y desactivar los bloques, únicamente ejecutando
+los bloques que estén activos en ese momento y manteniendo el resto en estado inactivo.
 
 \begin{code}[H]
     \begin{lstlisting}[language=python]
@@ -343,8 +343,8 @@ momento y manteniendo el resto en estado inactivo.
 \end{code}
 
 Uno de los bloques nuevos es el generador de ubicaciones aleatorias. Éste también es el que se encarga de decidir cuál será el siguiente estado. Para ello tiene un contador
-interno que le permite saber cuántas veces se han generado ubicaciones aleatorias y, cuando se llegue al valor de \textit{max\_times} se cambia al estado de volver al origen.
-Para generar la ubicación aleatoria, generamos un número que cumpla que num1 esté entre \textit{x-márgen} y \textit{x+márgen} y otro num2 que esté entre \textit{y-márgen} y \textit{y+márgen},
+interno que le permite saber cuántas veces se han generado ubicaciones aleatorias y, cuando se llegua al valor de \textit{max\_times} cambia al estado de volver al origen.
+Para generar la ubicación aleatoria, genera un número que cumpla que num1 esté entre \textit{x-márgen} y \textit{x+márgen} y otro num2 que esté entre \textit{y-márgen} y \textit{y+márgen},
 para evitar ubicaciones que estén demasiado alejadas del robot. También dicho número debe estar entre 0 y 30, ya que estos son los límites del mundo (máximo que se
 representa dentro del bloque \textit{display}).
 
@@ -428,9 +428,9 @@ varias trazas para saber en qué punto del comportamiento se encuentra la ejecuc
     \label{cod:FSM_return_home}
 \end{code}
 
-El bloque que transforma las fuerzas a velocidades también cambia, ya que ahora hay que tener en cuenta la componente lineal de las fuerzas y, por lo tanto, calcular nuevas
+El bloque que transforma las fuerzas a velocidades también cambia, ya que ahora hay que tener en cuenta también la componente lineal de las fuerzas y, por lo tanto, calcular nuevas
 proporciones y evaluar valores máximos y mínimos. También se ha añadido que, si la velocidad lineal es negativa y la angular es cercana a 0 (valor absoluto menor que 0.3), se
-ponga al robot a girar estático. Esto es para evitar objetivos que se encuentren detrás del robot y que, por lo tanto, intente llegar a ellos marcha atrás.
+ponga al robot a girar estático. Esto es para evitar objetivos que se encuentren detrás del robot y que, por lo tanto, intente llegar a ellos dando marcha atrás.
 
 \begin{code}[H]
     \begin{lstlisting}[language=python]
@@ -475,16 +475,18 @@ ponga al robot a girar estático. Esto es para evitar objetivos que se encuentre
 \end{code}
 
 Por último, el bloque \textit{display} consiste en crear una imagen mediante un \textit{array} de \textit{numpy} en el que se muestra aproximadamente una representación del
-mundo que ve el robot. Aquí se muestran tanto la ubicación del robot y del destino, como las fuerzas atractiva (verde), repulsiva (roja) y total (naranja), sus valores y las lecturas
-del láser mediante pequeños puntos. También se ha representado cada metro cuadrado del simulador mediante una cuadrícula en la imagen.
+mundo que ve el robot. Aquí se muestran tanto la ubicación del robot y del destino, como las fuerzas vectoriales atractiva (verde), repulsiva (roja) y total (naranja), sus valores y las lecturas
+del láser mediante pequeños puntos. También se ha representado cada metro cuadrado del simulador mediante una cuadrícula en esa imagen.
 
-Aquí se usa la librería cv2 de opencv-python\footnote{\textbf{OpenCV-Python}: \url{https://pypi.org/project/opencv-python/}} para editar la imágen, para insertar
+Aquí se usa la librería cv2 de opencv-python\footnote{\textbf{OpenCV-Python}: \url{https://pypi.org/project/opencv-python/}} para editar la imagen, para insertar
 líneas (\textit{cv2.line} para líneas y \textit{cv2.arrowedLine} para flechas) y para escribir texto (\textit{cv2.putText}), al igual que la librería \textit{math}
 (\textit{cos}, \textit{sin}, \textit{radians}, \textit{sqrt}, ...) para calcular la orientación de las flechas de las distintas fuerzas.
 
-Dada la extensión del código, no se va a incluir en esta memoria, por lo que
-aquí\footnote{\textbf{Código bloque display}: \url{https://github.com/RoboticsLabURJC/2022-tfg-david-tapiador/blob/main/FSM/ZIPS/FSM_final/modules/Code_1.py}}
+Dada la extensión del código, no se va a incluir en esta memoria, por lo que en el repositorio
+público\footnote{\textbf{Código bloque display}: \url{https://github.com/RoboticsLabURJC/2022-tfg-david-tapiador/blob/main/FSM/ZIPS/FSM_final/modules/Code_1.py}}
 se puede acceder a él.
+
+\newpage
 
 \subsection{Validación experimental}
 \label{subsec:val_exp_FSM}

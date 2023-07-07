@@ -241,6 +241,9 @@ más a un array. Esto se hará en el callback, ya que es donde se actualiza el v
   \caption[Clase del nodo suscriptor para láser]{Clase del nodo suscriptor para el láser.}
   \label{cod:laser_node_class}
 \end{code}
+
+\newpage
+
 En cuanto a la función main, sólo habría que cambiar la función \textit{share}, adaptándola de nuevo al tipo de mensaje, en este caso un array:
 \begin{code}[H]
   \begin{lstlisting}[language=python]
@@ -275,6 +278,8 @@ en una terminal los valores recibidos, tanto con el robot real como con el simul
     \label{fig:vid_laserR}
 \end{figure}
 \footnotetext{\textbf{Vídeo bloque láser real}: \url{https://www.youtube.com/watch?v=-MweaxUVsCg&ab_channel=Tapii}}
+
+\newpage
 
 \subsection{Bloque odometría ROS2}
 \label{subsec:odomROS2}
@@ -379,19 +384,18 @@ y a partir de ahí crear el nodo publicador necesario para este bloque.
             auto_enable = True
         rclpy.init()
         vel_publisher = VelPublisher(parameters.read_string('ROSTopic'))
-        try:
-            while auto_enable or inputs.read_number('Enable'):
-                velocities = inputs.read_array('Vels')
-                if velocities != None:
-                    rclpy.spin_once(vel_publisher)
-                synchronise()
-        except KeyboardInterrupt:
-            vel_publisher.destroy_node()
-            rclpy.shutdown()
+
+        while auto_enable or inputs.read_number('Enable'):
+            velocities = inputs.read_array('Vels')
+            if velocities != None:
+                rclpy.spin_once(vel_publisher)
+            synchronise()
   \end{lstlisting}
   \caption[Bloque MotorDriverROS2]{Bloque MotorDriverROS2 completo.}
   \label{cod:motordriverros2_all}
 \end{code}
+
+\newpage
 
 Al ser un publicador, funciona con un temporizador para publicar el mensaje actualizado. Como se puede ver, se lee un array, se guarda en
 la variable global y cuando vuelva a ejecutarse el temporizador, se enviará la última actualización de las velocidades.

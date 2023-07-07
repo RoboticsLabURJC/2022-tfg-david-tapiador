@@ -4,13 +4,13 @@
 \section{Objetivos}
 \label{sec:objetivos}
 
-En VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores
+En la herramienta VisualCircuit, antes de realizar este proyecto, ya existían bloques dedicados específicamente a la robótica para algunos sensores
 (cámara, odometría e IMU\footnote{\textbf{IMU}: Inertial Measurement Unit}) y para los motores usando ROS
 \textit{Noetic}\footnote{\textbf{ROS Noetic}: \url{http://wiki.ros.org/noetic}}, pero al tratarse de una versión obsoleta del middleware,
-decidimos que ya era momento de actualizar a ROS2 \textit{Humble}\footnote{\textbf{ROS Humble}: \url{https://docs.ros.org/en/humble/index.html}},
+decidimos que era momento de actualizar a ROS2 \textit{Humble}\footnote{\textbf{ROS Humble}: \url{https://docs.ros.org/en/humble/index.html}},
 ya que es la versión estable más moderna en el momento de realización de este Trabajo Fin de Grado.\\
 
-Los objetivos de este Trabajo Fin de Grado son los siguientes:
+Los objetivos concretos de este Trabajo Fin de Grado son los siguientes:
 
 \begin{itemize}
 	\item   Desarrollar bloques para sensores y actuadores usando ROS2 \textit{Humble} y probar su correcto funcionamiento mediante
@@ -19,7 +19,7 @@ Los objetivos de este Trabajo Fin de Grado son los siguientes:
 	\item   Diseñar y construir aplicaciones complejas que usen estos bloques para comprobar su funcionalidad en situaciones reales:
     \begin{itemize}
         \item   Aplicación sigue-persona: usar reconocimiento visual para seguir a una persona tanto en entorno simulado como real,
-                    usando el robot TurtleBot2 (\ref{sec:turtlebot2}).
+                    usando el robot TurtleBot2 (sección \ref{sec:turtlebot2}).
                     Veremos más en el capítulo \ref{cap:capitulo5}.
         \item   Aplicación \textit{Virtual Force Field}: usar el láser y la odometría para navegar por el entorno evitando obstáculos.
                     Examinaremos con mayor detalle en el capítulo \ref{cap:capitulo6}.
@@ -38,7 +38,7 @@ Este Trabajo Fin de Grado comenzó en abril de 2022 y finalizó en junio de 2023
                 de bloqueo.
 	\item   Uso de un blog\footnote{\textbf{Blog}: \url{https://roboticslaburjc.github.io/2022-tfg-david-tapiador/}} donde se iba actualizando el
                 progreso antes de las reuniones, donde se puede comprobar el desarrollo cronológico del trabajo.
-	\item   Todo el material usado y desarrollado durante este Trabajo Fin de Grado se ha ido actualizando en un repositorio de
+	\item   Todo el material usado y desarrollado durante este Trabajo Fin de Grado se ha ido actualizando en un repositorio público de
                 GitHub\footnote{\textbf{GitHub del TFG}: \url{https://github.com/RoboticsLabURJC/2022-tfg-david-tapiador}}.
 \end{itemize}
 
@@ -52,8 +52,8 @@ Como se ha dicho en el anterior punto, el desarrollo de este TFG ha durado algo 
                 propios que modifiquen imágenes o compartan información.
 	\item   \textbf{Inicio del TFG}: Configuración del entorno de pruebas (instalación de ROS2 \textit{Humble}, diseño de mundos
                 en \textit{Gazebo}...)..
-    \item   \textbf{Desarrollo de bloques con ROS2}: Actualización y creación de bloques para sensores y actuadores usando ROS2 \textit{Humble}.
-    \item   \textbf{Prueba de los bloques en situaciones reales}: Desarrollo de aplicaciones avanzadas para probar el correcto
+    \item   \textbf{Desarrollo de bloques drivers con ROS2}: Actualización y creación de bloques para sensores y actuadores usando ROS2 \textit{Humble}.
+    \item   \textbf{Prueba de los bloques en situaciones reales}: Desarrollo de aplicaciones robóticas avanzadas para probar el correcto
                 funcionamiento de los bloques implementados. 
     \item   \textbf{Memoria del Trabajo Fin de Grado}: Redacción de esta memoria. 
 \end{enumerate}

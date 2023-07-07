@@ -16,7 +16,7 @@ Python cuenta con un gran número de bibliotecas y módulos que se usarán a lo 
 permite usar operaciones matemáticas complejas (senos, cosenos, generación de números pseudo-aleatorios...).
 
 Este lenguaje de programación cuenta con varias versiones. La que se usará durante el TFG será python 3.8, ya que la programación dentro
-de la plataforma VisualCircuit (\ref{sec:visualcircuit}) se hace en este lenguaje.
+de la plataforma VisualCircuit (sección \ref{sec:visualcircuit}) se hace en este lenguaje.
 
 \section{ROS2 (Robot Operating System 2)}
 \label{sec:ros2}
@@ -47,7 +47,7 @@ ROS cuenta con dos versiones principales, ROS y ROS2\footnote{\textbf{Versiones 
 python2 (aunque se puede cambiar reduciendo su optimización), frente a los lenguajes de ROS2 que permite usar tanto C++11, C++14 y python3.5 (versión mínima).
 Dentro de ambas versiones hay distintas distribuciones, como por ejemplo ROS Kinetic, Melodic o Noetic, o ROS2 \textit{Foxy}, \textit{Galactic} o \textit{Humble}.
 
-A lo largo del proyecto se usará ROS2 \textit{Humble} para obtener información del robot TurtleBot2 (\ref{sec:turtlebot2}), tanto real como simulado,
+A lo largo del proyecto se usará ROS2 \textit{Humble} para obtener información del robot TurtleBot2 (sección \ref{sec:turtlebot2}), tanto real como simulado,
 como por ejemplo su posición en el entorno simulado o las últimas medidas de sus sensores, y para comandarle instrucciones (velocidades a sus motores).
 
 \subsection{Visualizador RVIZ2}
@@ -124,7 +124,7 @@ para poder colocar el portátil encima del robot y así poder conectarlo a la ba
 % ** ASUS XTION
 La cámara \textit{ASUS Xtion} es una cámara RGB-D\footnote{\textbf{RGB-D}: RedGreenBlue-Depth, hace referencia las cámaras que captan la imagen y
 las distancias de cada pixel.}, que ofrece tanto imagen como una nube de puntos con la distancia medida para cada pixel de la imagen.
-Esta cámara ofrece una imágen de 720p, con una frecuencia de 60fps. En la parte de profundidad, es capaz de captar desde 0.8m hasya 3.5 con un
+Esta cámara ofrece una imagen de 720p, con una frecuencia de 60fps. En la parte de profundidad, es capaz de captar desde 0.8m hasya 3.5 con un
 ángulo efectivo de 70º. Se conecta mediante USB directamente al ordenador.\\
 En el proyecto, como debemos usarla con ROS2, usaremos el paquete creado por un usuario de
 internet\footnote{\textbf{Drivers ASUS-Xtion ROS2}: \url{https://github.com/mgonzs13/ros2_asus_xtion}}.\\
@@ -141,7 +141,7 @@ internet\footnote{\textbf{Drivers ASUS-Xtion ROS2}: \url{https://github.com/mgon
 % ** RPLIDAR
 
 Se trata de un láser de 360º con un rango de medida desde 0.2m hasta 16m y una frecuencia de muestreo que se puede ajustar desde 5Hz hasta 15Hz.
-Usando los drivers mencionados en el apartado del TurtleBot2 (\ref{subsec:turtlebot2_base}) encontraremos un paquete para poder activar y usar este sensor con ROS2.\\
+Usando los drivers mencionados en el apartado del TurtleBot2 (sección \ref{subsec:turtlebot2_base}) encontraremos un paquete para poder activar y usar este sensor con ROS2.\\
 
 \begin{figure} [H]
     \begin{center}
@@ -161,7 +161,7 @@ ODE\footnote{\textbf{Open Dynamics Engine}: \url{https://www.ode.org/}}, aunque 
 Bullet\footnote{\textbf{Bullet}: \url{https://pybullet.org/wordpress/}} o DART\footnote{\textbf{DART}: \url{https://dartsim.github.io/}}.\\
 
 Al estar orientado a la robótica, permite integrar fácilmente modelos de robots reales con sensores (incluso simulando sus ruidos) y enviar a través
-de los distintos topics de ROS o ROS2 (\ref{sec:ros2}) alguna información directa del simulador, como la posición, medidas de los sensores simulados o
+de los distintos topics de ROS o ROS2 (sección \ref{sec:ros2}) alguna información directa del simulador, como la posición, medidas de los sensores simulados o
 incluso información de objetos no programables (del entorno).\\
 
 Actualmente Gazebo cuenta con dos versiones principales, \textit{Gazebo classic}\footnote{\textbf{Gazebo classic}: \url{https://classic.gazebosim.org/}} e
@@ -180,8 +180,8 @@ versión de \textit{Gazebo classic}.
 \label{subsec:turtlebot2_sim}
 % ** TURTLEBOT2 -> SIMULADOR
 
-Para algunas partes del proyecto, como el desarrollo de \textit{drivers} para ROS2 (\ref{cap:capitulo4}) o el comportamiento VFF usando
-máquinas de estados (\ref{cap:capitulo6}), el simulador ha servido para probar y desarrollar los algoritmos. Para esto, se ha usado un modelo del
+Para algunas partes del proyecto, como el desarrollo de \textit{drivers} para ROS2 (capítulo \ref{cap:capitulo4}) o el comportamiento VFF usando
+máquinas de estados (capítulo \ref{cap:capitulo6}), el simulador ha servido para probar y desarrollar los algoritmos. Para esto, se ha usado un modelo del
 TurtleBot2 que cuenta con los mismos sensores (cámara, \textit{RPLIDAR}, \textit{bumper}, etc) que el real, así como los mismos \textit{topics}.
 
 Este modelo del robot se obtiene del repositorio de
@@ -217,6 +217,8 @@ Está desarrollado sobre IceStudio\footnote{\textbf{IceStudio Project}: \url{htt
     \caption[VisualCircuit]{Página de VisualCircuit.}
     \label{fig:VC_empty}
 \end{figure}
+
+\newpage
 
 Los bloques que se pueden usar están divididos en varias pestañas: \textit{basics}, \textit{processing} y \textit{drivers}.
 \begin{itemize}
